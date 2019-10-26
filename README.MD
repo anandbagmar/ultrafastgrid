@@ -1,5 +1,6 @@
 ## Prerequisites
 * Get the appropriate version of the chrome driver and gecko driver
+* Download the selenium-server-standalone jar (I used v3.9.1 and placed it in the lib directory) 
 * Set the Applitools API key as an environment variable - *APPLITOOLS_API_KEY*
 
 ## Start the SeleniumGrid
