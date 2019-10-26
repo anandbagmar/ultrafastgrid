@@ -5,7 +5,6 @@ import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.ClassicRunner;
 import com.applitools.eyes.selenium.Eyes;
 import com.applitools.eyes.selenium.StitchMode;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -143,19 +142,5 @@ public class GitHubEyesGridTest extends BaseTest {
         eyes.setForceFullPageScreenshot(true);
         eyes.setSendDom(true);
         return eyes;
-    }
-
-    void handleTestResults(Throwable ex, TestResults result) {
-        System.out.println("\t\t" + result);
-        System.out.printf("\t\tBrowser = %s,OS = %s, viewport = %dx%d, matched = %d,mismatched = %d, missing = %d,aborted = %s\n",
-                result.getHostApp(),
-                result.getHostOS(),
-                result.getHostDisplaySize().getWidth(),
-                result.getHostDisplaySize().getHeight(),
-                result.getMatches(),
-                result.getMismatches(),
-                result.getMissing(),
-                (result.isAborted() ? "aborted" : "no"));
-        System.out.println("Results available here: " + result.getUrl());
     }
 }
