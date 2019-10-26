@@ -1,10 +1,6 @@
 package Utilities;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.io.IOException;
-import java.util.Arrays;
 
 public class DriverUtils {
     public static String getPathForChromeDriverFromMachine() {
