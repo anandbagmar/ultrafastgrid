@@ -67,4 +67,14 @@ public abstract class BaseTest {
             eyes.checkWindow("Blog title - " + blogPosts.get(key));
         });
     }
+
+    protected void checkProfilePage(Eyes eyes) {
+        String url = "https://essenceoftesting.blogspot.com";
+        driver.get(url);
+        eyes.setForceFullPageScreenshot(false);
+        eyes.checkWindow("Blog home");
+        eyes.setForceFullPageScreenshot(true);
+        driver.findElement(By.cssSelector("a.profile-link")).click();
+        eyes.checkWindow("Blog profile");
+    }
 }

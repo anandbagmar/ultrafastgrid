@@ -88,14 +88,14 @@ public class GitHubVisualGridCloudTest extends BaseTest {
     }
 
 
-//    @Test(description = "Blogs in 2019")
+    @Test(description = "Blogs in 2019")
     public void blogIn2019() {
         String url = "https://essenceoftesting.blogspot.com";
         eyes.setForceFullPageScreenshot(false);
         checkBlogPages(eyes, url);
     }
 
-//    @Test(description = "Blogs in 2019 - Mobile View")
+    @Test(description = "Blogs in 2019 - Mobile View")
     public void blogIn2019MobileView() {
         String url = "https://essenceoftesting.blogspot.com/?m=1";
         checkBlogPages(eyes, url);
@@ -103,13 +103,7 @@ public class GitHubVisualGridCloudTest extends BaseTest {
 
     @Test(description = "Blog profile")
     public void seeProfile() {
-        String url = "https://essenceoftesting.blogspot.com";
-        driver.get(url);
-        eyes.setForceFullPageScreenshot(false);
-        eyes.checkWindow("Blog home");
-        eyes.setForceFullPageScreenshot(true);
-        driver.findElement(By.cssSelector("a.profile-link")).click();
-        eyes.checkWindow("Blog profile");
+        checkProfilePage(eyes);
     }
 
     private Eyes configureEyes(EyesRunner runner) {

@@ -38,7 +38,10 @@ public class GitHubEyesTest extends BaseTest {
     @BeforeMethod
     public void beforeMethod(Method method) {
         WebDriver innerDriver = null;
-        String browser = (null == System.getenv("browser")) ? "chrome" : System.getenv("browser");
+        String browser = "chrome";
+        if (method.getName().contains("firefox")) {
+            browser = "firefox";
+        }
         System.out.println("Running test with browser - " + browser);
         numOfTests++;
         switch (browser) {
@@ -82,14 +85,14 @@ public class GitHubEyesTest extends BaseTest {
         System.out.println(">>> " + GitHubEyesTest.class.getSimpleName() + " - " + numOfTests + " Tests took '" + seconds + "' seconds to run for '" + numOfBrowsers + "' configurations <<<");
     }
 
-//    @Test(description = "Blogs in 2019")
+    @Test(description = "Blogs in 2019")
     public void blogIn2019() {
         String url = "https://essenceoftesting.blogspot.com";
         eyes.setForceFullPageScreenshot(false);
         checkBlogPages(eyes, url);
     }
 
-//    @Test(description = "Blogs in 2019 - Mobile View")
+    @Test(description = "Blogs in 2019 - Mobile View")
     public void blogIn2019MobileView() {
         String url = "https://essenceoftesting.blogspot.com/?m=1";
         checkBlogPages(eyes, url);
@@ -97,13 +100,25 @@ public class GitHubEyesTest extends BaseTest {
 
     @Test(description = "Blog profile")
     public void seeProfile() {
+        checkProfilePage(eyes);
+    }
+
+    @Test(description = "Blogs in 2019")
+    public void blogIn2019_firefox() {
         String url = "https://essenceoftesting.blogspot.com";
-        driver.get(url);
         eyes.setForceFullPageScreenshot(false);
-        eyes.checkWindow("Blog home");
-        eyes.setForceFullPageScreenshot(true);
-        driver.findElement(By.cssSelector("a.profile-link")).click();
-        eyes.checkWindow("Blog profile");
+        checkBlogPages(eyes, url);
+    }
+
+    @Test(description = "Blogs in 2019 - Mobile View")
+    public void blogIn2019MobileView_firefox() {
+        String url = "https://essenceoftesting.blogspot.com/?m=1";
+        checkBlogPages(eyes, url);
+    }
+
+    @Test(description = "Blog profile")
+    public void seeProfile_firefox() {
+        checkProfilePage(eyes);
     }
 
     private Eyes configureEyes(EyesRunner runner) {
