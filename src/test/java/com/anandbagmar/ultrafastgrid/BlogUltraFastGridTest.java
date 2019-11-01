@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class BlogVisualGridCloudTest extends BaseTest {
+public class BlogUltraFastGridTest extends BaseTest {
     private Eyes eyes;
     private EyesRunner runner;
     final int concurrency = 20;
@@ -86,7 +86,7 @@ public class BlogVisualGridCloudTest extends BaseTest {
         }
         after = LocalDateTime.now();
         long seconds = Duration.between(before, after).toMillis() / 1000;
-        System.out.println(">>> " + BlogVisualGridCloudTest.class.getSimpleName() + " - " + numOfTests + " Tests took '" + seconds + "' seconds to run for '" + numOfBrowsers + "' configurations <<<");
+        System.out.println(">>> " + BlogUltraFastGridTest.class.getSimpleName() + " - " + numOfTests + " Tests took '" + seconds + "' seconds to run for '" + numOfBrowsers + "' configurations <<<");
     }
 
 
