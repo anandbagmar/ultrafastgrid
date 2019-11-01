@@ -11,6 +11,7 @@ import com.applitools.eyes.visualgrid.model.ScreenOrientation;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -19,7 +20,7 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class GitHubVisualGridCloudTest extends BaseTest {
+public class BlogVisualGridCloudTest extends BaseTest {
     private Eyes eyes;
     private EyesRunner runner;
     final int concurrency = 20;
@@ -47,7 +48,9 @@ public class GitHubVisualGridCloudTest extends BaseTest {
         switch (browser) {
             case "chrome":
                 DriverUtils.getPathForChromeDriverFromMachine();
-                innerDriver = new ChromeDriver();
+                ChromeOptions options = new ChromeOptions();
+                options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+                innerDriver = new ChromeDriver(options);
                 break;
             case "firefox":
                 DriverUtils.getPathForFirefoxDriverFromMachine();
@@ -83,7 +86,7 @@ public class GitHubVisualGridCloudTest extends BaseTest {
         }
         after = LocalDateTime.now();
         long seconds = Duration.between(before, after).toMillis() / 1000;
-        System.out.println(">>> " + GitHubVisualGridCloudTest.class.getSimpleName() + " - " + numOfTests + " Tests took '" + seconds + "' seconds to run for '" + numOfBrowsers + "' configurations <<<");
+        System.out.println(">>> " + BlogVisualGridCloudTest.class.getSimpleName() + " - " + numOfTests + " Tests took '" + seconds + "' seconds to run for '" + numOfBrowsers + "' configurations <<<");
     }
 
 

@@ -6,6 +6,7 @@ import com.applitools.eyes.selenium.ClassicRunner;
 import com.applitools.eyes.selenium.Eyes;
 import com.applitools.eyes.selenium.StitchMode;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -18,7 +19,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class GitHubEyesGridTest extends BaseTest {
+public class BlogEyesGridTest extends BaseTest {
     private Eyes eyes;
     private EyesRunner runner;
     private String siteName = "blog-eyes";
@@ -61,7 +62,9 @@ public class GitHubEyesGridTest extends BaseTest {
             switch (browser) {
                 case "chrome":
                     DriverUtils.getPathForChromeDriverFromMachine();
-                    innerDriver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), new ChromeOptions());
+                    ChromeOptions options = new ChromeOptions();
+                    options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+                    innerDriver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), options);
                     break;
                 case "firefox":
                     DriverUtils.getPathForFirefoxDriverFromMachine();
@@ -93,7 +96,7 @@ public class GitHubEyesGridTest extends BaseTest {
         }
         after = LocalDateTime.now();
         long seconds = Duration.between(before, after).toMillis() / 1000;
-        System.out.println(">>> " + GitHubEyesGridTest.class.getSimpleName() + " - " + numOfTests + " Tests took '" + seconds + "' seconds to run for '" + numOfBrowsers + "' configurations <<<");
+        System.out.println(">>> " + BlogEyesGridTest.class.getSimpleName() + " - " + numOfTests + " Tests took '" + seconds + "' seconds to run for '" + numOfBrowsers + "' configurations <<<");
     }
 
     @Test(description = "Blogs in 2019")

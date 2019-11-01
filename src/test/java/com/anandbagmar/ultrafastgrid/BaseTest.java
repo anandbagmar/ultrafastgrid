@@ -56,27 +56,41 @@ public abstract class BaseTest {
         return blogPosts;
     }
 
+    protected void checkBlogPages(String url) { checkBlogPages(null, url); }
+
     protected void checkBlogPages(Eyes eyes, String url) {
         driver.get(url);
-        eyes.checkWindow("Blog home");
-        eyes.setForceFullPageScreenshot(true);
+        if (null != eyes) {
+            eyes.checkWindow("Blog home");
+            eyes.setForceFullPageScreenshot(true);
+        }
         HashMap<String, String> blogPosts = getBlogPosts();
         blogPosts.keySet().forEach(key -> {
             System.out.println("title - " + blogPosts.get(key));
             System.out.println("url - " + key);
             driver.get(key);
-            eyes.checkWindow("Blog title - " + blogPosts.get(key));
+            if (null != eyes) {
+                eyes.checkWindow("Blog title - " + blogPosts.get(key));
+            }
         });
     }
 
     protected void checkProfilePage(Eyes eyes) {
         String url = "https://essenceoftesting.blogspot.com";
         driver.get(url);
-        eyes.setForceFullPageScreenshot(false);
-        eyes.checkWindow("Blog home");
-        eyes.setForceFullPageScreenshot(true);
+        if (null != eyes) {
+            eyes.setForceFullPageScreenshot(false);
+            eyes.checkWindow("Blog home");
+            eyes.setForceFullPageScreenshot(true);
+        }
         driver.findElement(By.cssSelector("a.profile-link")).click();
-        eyes.checkWindow("Blog profile");
+        if (null != eyes) {
+            eyes.checkWindow("Blog profile");
+        }
+    }
+
+    protected void checkProfilePage() {
+        checkBlogPages(null);
     }
 
     protected void handleTestResults(Throwable ex, TestResults result) {
