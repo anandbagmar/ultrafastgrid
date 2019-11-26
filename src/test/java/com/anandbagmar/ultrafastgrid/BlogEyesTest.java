@@ -32,7 +32,7 @@ public class BlogEyesTest extends BaseTest {
         before = LocalDateTime.now();
         numOfBrowsers = 0;
         numOfTests = 0;
-        batch = new BatchInfo("blog - eyes");
+        batch = new BatchInfo("Demo - blog - eyes");
     }
 
     @BeforeMethod

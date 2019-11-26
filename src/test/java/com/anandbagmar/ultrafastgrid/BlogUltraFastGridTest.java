@@ -36,7 +36,7 @@ public class BlogUltraFastGridTest extends BaseTest {
         before = LocalDateTime.now();
         numOfBrowsers = 0;
         numOfTests = 0;
-        batch = new BatchInfo("blog - Ultrafast Grid");
+        batch = new BatchInfo("Demo - blog - Ultrafast Grid");
     }
 
     @BeforeMethod

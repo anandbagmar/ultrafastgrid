@@ -34,7 +34,7 @@ public class BlogEyesGridTest extends BaseTest {
         before = LocalDateTime.now();
         numOfBrowsers = 0;
         numOfTests = 0;
-        batch = new BatchInfo("blog - SeGrid");
+        batch = new BatchInfo("Demo - blog - SeGrid");
     }
 
     @BeforeMethod
