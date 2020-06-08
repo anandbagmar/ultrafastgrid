@@ -6,8 +6,6 @@ apply plugin: 'eclipse'
 group 'com.anandbagmar'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
@@ -15,10 +13,10 @@ repositories {
 }
 
 dependencies {
-    compile "org.testng:testng:6.14.3"
-    compile "com.applitools:eyes-selenium-java3:3.158.4"
-    compile group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '3.7.1'
-    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+    compile "org.testng:testng:6.+"
+    compile "com.applitools:eyes-selenium-java3:3.+"
+    compile group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '3.+'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.+'
 }
 
 test {
