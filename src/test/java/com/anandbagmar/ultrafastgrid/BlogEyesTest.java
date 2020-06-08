@@ -19,9 +19,7 @@ import java.time.LocalDateTime;
 public class BlogEyesTest extends BaseTest {
     private Eyes eyes;
     private EyesRunner runner;
-    final int concurrency = 20;
     private String siteName = "blog-eyes";
-    private String url = "https://github.com";
     LocalDateTime before;
     LocalDateTime after;
     private int numOfBrowsers;

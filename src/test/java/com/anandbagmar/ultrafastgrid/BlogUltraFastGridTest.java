@@ -9,6 +9,7 @@ import com.applitools.eyes.selenium.StitchMode;
 import com.applitools.eyes.visualgrid.model.DeviceName;
 import com.applitools.eyes.visualgrid.model.ScreenOrientation;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -24,26 +25,33 @@ public class BlogUltraFastGridTest extends BaseTest {
     private Eyes eyes;
     private EyesRunner runner;
     final int concurrency = 20;
-    private String siteName = "blog-grid";
-    private String url = "https://github.com";
+    private String siteName = "blog-grid-test";
     LocalDateTime before;
     LocalDateTime after;
     private int numOfBrowsers;
     private int numOfTests;
+    RectangleSize viewportSize = new RectangleSize(1200, 1200);
+
+    @BeforeSuite
+    public void setUpSuite() {
+        String batchName = "mytest-" + viewportSize.toString();
+        System.out.println("BeforeSuite: Batch name: '" + batchName + "'");
+        batch = new BatchInfo(batchName);
+    }
 
     @BeforeClass
     public void setUp() {
         before = LocalDateTime.now();
+        System.out.println("BeforeClass: Time: '" + before.toString() + "'");
         numOfBrowsers = 0;
         numOfTests = 0;
-        batch = new BatchInfo("Demo - blog - Ultrafast Grid");
     }
 
     @BeforeMethod
     public void beforeMethod(Method method) {
         WebDriver innerDriver = null;
         String browser = (null == System.getenv("browser")) ? "chrome" : System.getenv("browser");
-        System.out.println("Running test with browser - " + browser);
+        System.out.println("BeforeMethod: Running test with browser - " + browser);
         numOfTests++;
         switch (browser) {
             case "chrome":
@@ -60,23 +68,25 @@ public class BlogUltraFastGridTest extends BaseTest {
                 innerDriver = new ChromeDriver();
         }
 
-        RectangleSize viewportSize = new RectangleSize(1024, 768);
         driver = null;
 
         runner = new VisualGridRunner(concurrency);
         eyes = configureEyes(runner);
 
-        driver = eyes.open(innerDriver, siteName, method.getName(), viewportSize);
+        driver = eyes.open(innerDriver, "mytest-" + viewportSize.toString(), method.getName() + "-" + viewportSize.toString(), viewportSize);
     }
+
 
     @AfterMethod
     public void afterMethod(ITestResult result) {
+        System.out.println("AfterMethod");
         quitDriver();
         eyes.closeAsync();
     }
 
-    @AfterClass
+    @AfterSuite
     public void tearDown() {
+        System.out.println("AfterSuite: Get results from Applitools");
         TestResultsSummary allTestResults = runner.getAllTestResults(false);
         TestResultContainer[] results = allTestResults.getAllResults();
         for (int i = 0; i < results.length; i++) {
@@ -113,8 +123,10 @@ public class BlogUltraFastGridTest extends BaseTest {
         eyes.setBatch(batch);
         eyes.setMatchLevel(MatchLevel.STRICT);
         eyes.setStitchMode(StitchMode.CSS);
-        eyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
-        eyes.setLogHandler(new StdoutLogHandler(false));
+        String applitoolsApiKey = System.getenv("APPLITOOLS_API_KEY");
+        System.out.println("API key: " + applitoolsApiKey);
+        eyes.setApiKey(applitoolsApiKey);
+        eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setForceFullPageScreenshot(false);
         eyes.setSendDom(true);
         Configuration config = getVGConfiguration(eyes);
@@ -133,14 +145,28 @@ public class BlogUltraFastGridTest extends BaseTest {
         config.addBrowser(1024, 1024, BrowserType.IE_11);
         config.addBrowser(1024, 1024, BrowserType.IE_10);
         config.addBrowser(1024, 1024, BrowserType.EDGE);
+        config.addBrowser(1024, 1024, BrowserType.SAFARI);
+        config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
+        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
         config.addBrowser(1024, 1024, BrowserType.CHROME);
+        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
+        config.addBrowser(1024, 1024, BrowserType.CHROME_TWO_VERSIONS_BACK);
         config.addBrowser(1024, 1024, BrowserType.FIREFOX);
+        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
+        config.addBrowser(1024, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
 
         config.addBrowser(1280, 1024, BrowserType.IE_11);
         config.addBrowser(1280, 1024, BrowserType.IE_10);
         config.addBrowser(1280, 1024, BrowserType.EDGE);
+        config.addBrowser(1280, 1024, BrowserType.SAFARI);
+        config.addBrowser(1280, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
+        config.addBrowser(1280, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
         config.addBrowser(1280, 1024, BrowserType.CHROME);
+        config.addBrowser(1280, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
+        config.addBrowser(1280, 1024, BrowserType.CHROME_TWO_VERSIONS_BACK);
         config.addBrowser(1280, 1024, BrowserType.FIREFOX);
+        config.addBrowser(1280, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
+        config.addBrowser(1280, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
 
         config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
         config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);

@@ -41,8 +41,8 @@ public abstract class BaseTest {
     }
 
     protected HashMap<String, String> getBlogPosts() {
-        List<WebElement> listOfBlogs = driver.findElements(By.xpath("//a[contains(@href,\".com/2019\")]"));
         HashMap<String, String> blogPosts = new HashMap<>();
+        List<WebElement> listOfBlogs = driver.findElements(By.xpath("//a[contains(@href,\".com/2019\")]"));
         driver.findElements(By.xpath("//a[contains(@href,\".com/2019\")]")).forEach(ele -> {
             String title = ele.getText();
             String href = ele.getAttribute("href");
@@ -50,7 +50,8 @@ public abstract class BaseTest {
                 blogPosts.put(href, title);
             }
         });
-        blogPosts.clear();
+//        blogPosts.clear();
+        blogPosts.put("http://essenceoftesting.blogspot.com/2020/03/tracking-functional-coverage.html", "Tracking functional coverage from your api / functional UI (e2e) tests");
         blogPosts.put("https://essenceoftesting.blogspot.com/2019/02/talks-and-workshops-in-agile-india-2019.html", "Talks and workshops in Agile India 2019");
         blogPosts.put("https://essenceoftesting.blogspot.com/2019/10/overcoming-chromedriver-version.html", "Chrome driver version");
         return blogPosts;
@@ -83,7 +84,8 @@ public abstract class BaseTest {
             eyes.checkWindow("Blog home");
             eyes.setForceFullPageScreenshot(true);
         }
-        driver.findElement(By.cssSelector("a.profile-link")).click();
+        driver.get("https://www.blogger.com/profile/12067921188948137145");
+//        driver.findElement(By.cssSelector("a.profile-link")).click();
         if (null != eyes) {
             eyes.checkWindow("Blog profile");
         }
