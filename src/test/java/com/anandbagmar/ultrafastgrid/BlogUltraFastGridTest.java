@@ -138,13 +138,15 @@ public class BlogUltraFastGridTest extends BaseTest {
         Configuration config = eyes.getConfiguration();
         config.addBrowser(900, 600, BrowserType.IE_11);
         config.addBrowser(900, 600, BrowserType.IE_10);
-        config.addBrowser(900, 600, BrowserType.EDGE);
+        config.addBrowser(900, 600, BrowserType.EDGE_CHROMIUM);
         config.addBrowser(900, 600, BrowserType.CHROME);
         config.addBrowser(900, 600, BrowserType.FIREFOX);
 
         config.addBrowser(1024, 1024, BrowserType.IE_11);
         config.addBrowser(1024, 1024, BrowserType.IE_10);
-        config.addBrowser(1024, 1024, BrowserType.EDGE);
+        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
+        config.addBrowser(1024, 1024, BrowserType.EDGE_LEGACY);
+        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM_ONE_VERSION_BACK);
         config.addBrowser(1024, 1024, BrowserType.SAFARI);
         config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
         config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);

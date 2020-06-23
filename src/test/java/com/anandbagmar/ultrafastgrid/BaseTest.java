@@ -95,9 +95,10 @@ public abstract class BaseTest {
         checkBlogPages(null);
     }
 
-    protected void handleTestResults(Throwable ex, TestResults result) {
+    protected boolean handleTestResults(Throwable ex, TestResults result) {
         System.out.println("\t\t" + result);
-        System.out.printf("\t\tBrowser = %s,OS = %s, viewport = %dx%d, matched = %d,mismatched = %d, missing = %d,aborted = %s\n",
+        System.out.printf("\t\tName = '%s', \nBrowser = %s,OS = %s, viewport = %dx%d, matched = %d, mismatched = %d, missing = %d, aborted = %s\n",
+                result.getName(),
                 result.getHostApp(),
                 result.getHostOS(),
                 result.getHostDisplaySize().getWidth(),
@@ -107,5 +108,8 @@ public abstract class BaseTest {
                 result.getMissing(),
                 (result.isAborted() ? "aborted" : "no"));
         System.out.println("Results available here: " + result.getUrl());
+        boolean hasMismatches = result.getMismatches() == 0;
+        System.out.println("result: has mismatches: " + hasMismatches);
+        return hasMismatches;
     }
 }
