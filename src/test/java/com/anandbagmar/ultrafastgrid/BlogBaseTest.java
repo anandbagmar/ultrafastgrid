@@ -34,8 +34,8 @@ public abstract class BlogBaseTest extends BaseTest {
 
         driver.get(url);
         if (null != eyes) {
+            System.out.println("Eyes is NOT null. Doing check window");
             eyes.checkWindow("Blog home");
-            eyes.setForceFullPageScreenshot(true);
         }
         HashMap<String, String> blogPosts = getBlogPosts();
         blogPosts.keySet().forEach(key -> {

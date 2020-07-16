@@ -37,14 +37,14 @@ public class TestExecutionContext {
         return eyesRunner;
     }
 
-    public void addEyes(Eyes eyes) {
-        this.eyes = eyes;
-    }
-
-    public void addEyesRunner(EyesRunner runner) {
-        this.eyesRunner = runner;
-    }
-
+//    public void addEyes(Eyes eyes) {
+//        this.eyes = eyes;
+//    }
+//
+//    public void addEyesRunner(EyesRunner runner) {
+//        this.eyesRunner = runner;
+//    }
+//
 //    public void dump() {
 //        System.out.println("TestExecutionContext: dump()");
 //        System.out.println("TestName        : " + this.testName);

@@ -5,6 +5,7 @@ import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.selenium.Eyes;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -12,23 +13,30 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class JewelleryUltraFasGridTest extends BaseTest {
-    private final String siteName = "jewellery-eyes-ufg-test";
+    private final String appName = "jewellery-eyes-ufg-test";
     RectangleSize viewportSizeWeb = new RectangleSize(1024, 768);
     RectangleSize viewportSizeMWeb = new RectangleSize(360, 480);
     private static BatchInfo batch;
 
     @BeforeClass
     public void beforeClass() {
-        batch = new BatchInfo(siteName);
-        System.out.println("JewelleryUltraFasGridTest: BeforeClass: Batch name: '" + siteName + "'");
+        batch = new BatchInfo(appName);
+        batch.setNotifyOnCompletion(false);
+        System.out.println("JewelleryUltraFasGridTest: BeforeClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
     }
 
-    @BeforeMethod
+    @AfterClass
+    public void afterClass() {
+        batch.setCompleted(true);
+        System.out.println("JewelleryUltraFasGridTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
+    }
+
+    @BeforeMethod (alwaysRun = true)
     public void beforeMethod(Method method) {
         if (method.getName().toLowerCase().contains("mweb")) {
-            setupBeforeMethod(siteName, method, viewportSizeMWeb, true, batch);
+            setupBeforeMethod(appName, method, viewportSizeMWeb, true, batch);
         } else {
-            setupBeforeMethod(siteName, method, viewportSizeWeb, true, batch);
+            setupBeforeMethod(appName, method, viewportSizeWeb, true, batch);
         }
     }
 
