@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-public class ZalesUltraFastGridTest extends BaseTest {
+public class JewelleryUFGTest extends BaseTest {
     private final String siteName = "jewellery-eyes-ufg-test";
     RectangleSize viewportSizeWeb = new RectangleSize(1024, 768);
     RectangleSize viewportSizeMWeb = new RectangleSize(360, 480);
@@ -20,7 +20,7 @@ public class ZalesUltraFastGridTest extends BaseTest {
     @BeforeClass
     public void beforeClass() {
         batch = new BatchInfo(siteName);
-        System.out.println("ZalesUltraFastGridTest: BeforeClass: Batch name: '" + siteName + "'");
+        System.out.println("JewelleryUFGTest: BeforeClass: Batch name: '" + siteName + "'");
     }
 
     @BeforeMethod
