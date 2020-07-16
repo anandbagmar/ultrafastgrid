@@ -184,6 +184,9 @@ public abstract class BaseTest {
         eyes.setBatch(batch);
         eyes.setMatchLevel(MatchLevel.STRICT);
         eyes.setStitchMode(StitchMode.CSS);
+        String branchName = System.getenv("BRANCH_NAME");
+        branchName = ((null != branchName) && (!branchName.trim().isEmpty())) ? branchName.toLowerCase() : "main";
+        eyes.setBranchName(branchName);
         String applitoolsApiKey = System.getenv("APPLITOOLS_API_KEY");
         System.out.println("API key: " + applitoolsApiKey);
         eyes.setApiKey(applitoolsApiKey);
