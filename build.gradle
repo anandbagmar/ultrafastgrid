@@ -19,8 +19,44 @@ dependencies {
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.+'
 }
 
+project.ext.logDir = "${rootDir}/reports"
+
 test {
-    // enable TestNG support (default is JUnit)
     useTestNG() {
+        options {
+            parallel = 'methods'
+            threadCount = 5
+        }
+        reports.html.enabled = true
+        reports.html.setDestination(file("${project.logDir}/html"))
+
+        reports.junitXml.enabled = true
+        reports.junitXml.setDestination(file("${project.logDir}/junit"))
+        testLogging {
+            events "started", "passed", "skipped", "failed"
+            // show standard out and standard error of the test JVM(s) on the console
+            showStandardStreams = true
+            // show full exception trace
+            exceptionFormat = 'full'
+            showStackTraces = true
+            showCauses = true
+            showExceptions = true
+        }
     }
 }
+
+clean.doFirst {
+    delete "${rootDir}/target"
+    delete "${rootDir}/bin"
+    delete "${rootDir}/build"
+    delete "${rootDir}/out"
+    delete "${rootDir}/reports"
+    println "Clean: Deleted bin, build, out, target and reports directories"
+}
+
+clean.doLast {
+    mkdir "${rootDir}/reports"
+    println "Created reports directory"
+}
+
+//test.dependsOn clean

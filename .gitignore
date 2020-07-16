@@ -3,3 +3,4 @@
 build/
 out/
 *.jar
+reports/
