@@ -13,7 +13,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeSuite;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -22,40 +21,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class BaseTest {
-    protected static BatchInfo batch;
     private Map<Long, TestExecutionContext> sessionContext;
     private LocalDateTime bt_beforeMethod;
     private LocalDateTime bt_afterMethod;
-    private final int concurrency = 10;
-    private static String batchID;
-
-    @BeforeSuite
-    protected void setupBeforeSuite() {
-        batchID = LocalDateTime.now().toString();
-        System.out.println("BatchID: " + batchID);
-    }
-
-    protected static void setUpClass(String batchNamePrefix) {
-        batch = new BatchInfo(batchNamePrefix);
-        batch.setId(batchID);
-        System.out.println("BaseTest: BeforeClass: Batch name: '" + batchNamePrefix + "', having BatchID: " + batchID);
-    }
+    private final int concurrency = 20;
 
     protected void setupBeforeMethod(Method method) {
         WebDriver innerDriver = createDriver(method);
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver));
     }
 
-    public void setupBeforeMethod(String siteName, Method method, RectangleSize viewportSize, boolean useUFG) {
+    public void setupBeforeMethod(String siteName, Method method, RectangleSize viewportSize, boolean useUFG, BatchInfo batch) {
         WebDriver innerDriver = createDriver(method);
 
         EyesRunner runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
-        Eyes eyes = configureEyes(runner);
+        Eyes eyes = configureEyes(runner, batch);
 
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner));
 
         eyes.open(innerDriver, siteName, method.getName(), viewportSize);
-
     }
 
     private WebDriver createDriver(Method method) {
@@ -70,6 +54,7 @@ public abstract class BaseTest {
                 DriverUtils.getPathForChromeDriverFromMachine();
                 ChromeOptions options = new ChromeOptions();
                 options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+                options.addArguments("headless");
                 innerDriver = new ChromeDriver(options);
                 break;
             case "firefox":
@@ -179,7 +164,7 @@ public abstract class BaseTest {
 //        return testExecutionContext.getEyesRunner();
 //    }
 
-    private Eyes configureEyes(EyesRunner runner) {
+    private Eyes configureEyes(EyesRunner runner, BatchInfo batch) {
         Eyes eyes = new Eyes(runner);
         eyes.setBatch(batch);
         eyes.setMatchLevel(MatchLevel.STRICT);

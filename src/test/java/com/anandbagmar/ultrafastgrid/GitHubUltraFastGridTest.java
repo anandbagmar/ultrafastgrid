@@ -1,5 +1,6 @@
 package com.anandbagmar.ultrafastgrid;
 
+import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.selenium.Eyes;
 import org.openqa.selenium.By;
@@ -15,6 +16,7 @@ import java.lang.reflect.Method;
 public class GitHubUltraFastGridTest extends BaseTest {
     private final String siteName = "github-eyes-ufg-test";
     RectangleSize viewportSize = new RectangleSize(1024, 768);
+    private static BatchInfo batch;
 
     String expectedH1Text = "SignIn";
     String expectedUserName = "Username";
@@ -22,15 +24,16 @@ public class GitHubUltraFastGridTest extends BaseTest {
 
     @BeforeClass
     public void beforeClass() {
-        setUpClass(siteName);
+        batch = new BatchInfo(siteName);
+        System.out.println("GitHubUltraFastGridTest: BeforeClass: Batch name: '" + siteName + "'");
     }
 
     @BeforeMethod
     public void beforeMethod(Method method) {
-        setupBeforeMethod(siteName, method, viewportSize, true);
+        setupBeforeMethod(siteName, method, viewportSize, true, batch);
     }
 
-//    @Test(description = "Login to Github - 1st build, no Eyes")
+    //    @Test(description = "Login to Github - 1st build, no Eyes")
     public void loginGithubFirstBuildNoEyes() {
         WebDriver driver = getDriver();
 
@@ -61,7 +64,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         Assert.assertEquals(errorMessage, expectedErrorMessage);
     }
 
-//    @Test(description = "Validate error messages on Login to Github - new build, no Eyes")
+    //    @Test(description = "Validate error messages on Login to Github - new build, no Eyes")
     public void loginGithubNewBuildNoEyes() {
         WebDriver driver = getDriver();
         String expectedH1Text = "SignIn";
@@ -87,7 +90,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         Assert.assertEquals(errorMessage, expectedErrorMessage);
     }
 
-//    @Test(description = "Login to Github - 1st build, with Eyes")
+    //    @Test(description = "Login to Github - 1st build, with Eyes")
     public void loginGithubFirstBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver innerDriver = getDriver();

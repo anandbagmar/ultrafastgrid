@@ -1,5 +1,6 @@
 package com.anandbagmar.ultrafastgrid;
 
+import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.selenium.Eyes;
 import org.openqa.selenium.JavascriptExecutor;
@@ -14,18 +15,20 @@ public class ZalesUltraFastGridTest extends BaseTest {
     private final String siteName = "jewellery-eyes-ufg-test";
     RectangleSize viewportSizeWeb = new RectangleSize(1024, 768);
     RectangleSize viewportSizeMWeb = new RectangleSize(360, 480);
+    private static BatchInfo batch;
 
     @BeforeClass
     public void beforeClass() {
-        setUpClass(siteName);
+        batch = new BatchInfo(siteName);
+        System.out.println("ZalesUltraFastGridTest: BeforeClass: Batch name: '" + siteName + "'");
     }
 
     @BeforeMethod
     public void beforeMethod(Method method) {
         if (method.getName().toLowerCase().contains("mweb")) {
-            setupBeforeMethod(siteName, method, viewportSizeMWeb, true);
+            setupBeforeMethod(siteName, method, viewportSizeMWeb, true, batch);
         } else {
-            setupBeforeMethod(siteName, method, viewportSizeWeb, true);
+            setupBeforeMethod(siteName, method, viewportSizeWeb, true, batch);
         }
     }
 
