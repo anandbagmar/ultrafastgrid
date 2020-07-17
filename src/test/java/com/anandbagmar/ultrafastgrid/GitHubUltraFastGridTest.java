@@ -32,7 +32,6 @@ public class GitHubUltraFastGridTest extends BaseTest {
 
     @AfterClass
     public void afterClass() {
-//        batch.setCompleted(true);
         System.out.println("GitHubUltraFastGridTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
     }
 

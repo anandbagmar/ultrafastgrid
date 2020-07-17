@@ -24,7 +24,6 @@ public class BlogUltraFastGridTest extends BlogBaseTest {
 
     @AfterClass
     public void afterClass() {
-//        batch.setCompleted(true);
         System.out.println("BlogUltraFastGridTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
     }
 

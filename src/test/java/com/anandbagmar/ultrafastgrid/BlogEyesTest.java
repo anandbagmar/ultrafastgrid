@@ -24,7 +24,6 @@ public class BlogEyesTest extends BlogBaseTest {
 
     @AfterClass
     public void afterClass() {
-//        batch.setCompleted(true);
         System.out.println("BlogEyesTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
     }
 
@@ -33,20 +32,20 @@ public class BlogEyesTest extends BlogBaseTest {
         setupBeforeMethod(appName, method, viewportSize, false, batch);
     }
 
-    @Test(description = "Blogs in 2019")
+//    @Test(description = "Blogs in 2019")
     public void blogIn2019() {
         String url = "https://essenceoftesting.blogspot.com";
         Eyes eyes = getEyes();
         checkBlogPages(eyes, url);
     }
 
-    @Test(description = "Blogs in 2019 - Mobile View")
+//    @Test(description = "Blogs in 2019 - Mobile View")
     public void blogIn2019MobileView() {
         String url = "https://essenceoftesting.blogspot.com/?m=1";
         checkBlogPages(getEyes(), url);
     }
 
-    @Test(description = "Blog profile")
+//    @Test(description = "Blog profile")
     public void seeProfile() {
         checkProfilePage(getEyes());
     }

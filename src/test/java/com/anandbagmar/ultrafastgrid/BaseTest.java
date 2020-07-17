@@ -11,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 
@@ -70,20 +69,19 @@ public abstract class BaseTest {
         return innerDriver;
     }
 
-    @AfterMethod (alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
     public void afterMethod(ITestResult result) {
         TestExecutionContext testExecutionContext = getContext(Thread.currentThread().getId());
         Eyes eyes = testExecutionContext.getEyes();
         EyesRunner runner = testExecutionContext.getEyesRunner();
-        System.out.println("AfterMethod: Running test: '" + result.getMethod().getMethodName() + "', Batch name: '" + eyes.getBatch().getName() + "', BatchID: " + eyes.getBatch().getId());
         System.out.println("AfterMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: " + eyes.getConfiguration().getBatch().getName() + ", BatchID: " + eyes.getConfiguration().getBatch().getId());
         System.out.println("AfterMethod: Eyes Hashcode: " + eyes.hashCode() + ", EyesRunner Hashcode: " + runner.hashCode());
 
         quitDriver();
         eyes.closeAsync();
-        eyes.getBatch().setCompleted(false);
-        eyes.getConfiguration().getBatch().setCompleted(false);
-        eyes.getConfiguration().getBatch().setNotifyOnCompletion(false);
+//        eyes.getBatch().setCompleted(false);
+//        eyes.getConfiguration().getBatch().setCompleted(false);
+//        eyes.getConfiguration().getBatch().setNotifyOnCompletion(false);
         TestResultsSummary allTestResults = runner.getAllTestResults(false);
         TestResultContainer[] results = allTestResults.getAllResults();
         System.out.println("Number of results for test - " + result.getMethod().getMethodName() + ": " + results.length);
@@ -198,17 +196,13 @@ public abstract class BaseTest {
         return testExecutionContext.getEyes();
     }
 
-//    protected EyesRunner getEyesRunner() {
-//        TestExecutionContext testExecutionContext = getContext(Thread.currentThread().getId());
-//        return testExecutionContext.getEyesRunner();
-//    }
-
     private Eyes configureEyes(EyesRunner runner, BatchInfo batch) {
         Eyes eyes = new Eyes(runner);
         Configuration config = eyes.getConfiguration();
         config.setBatch(batch);
         config.setMatchLevel(MatchLevel.STRICT);
         config.setStitchMode(StitchMode.CSS);
+        config.getBatch().setNotifyOnCompletion(false);
         String branchName = System.getenv("BRANCH_NAME");
         branchName = ((null != branchName) && (!branchName.trim().isEmpty())) ? branchName.toLowerCase() : "main";
         System.out.println("Branch name: " + branchName);
@@ -219,36 +213,30 @@ public abstract class BaseTest {
         eyes.setLogHandler(new StdoutLogHandler(true));
         config.setForceFullPageScreenshot(false);
         config.setSendDom(true);
-        config = getVGConfiguration(config);
+        config = getUFGBrowserConfiguration(config);
         eyes.setConfiguration(config);
         return eyes;
     }
 
-    private Configuration getVGConfiguration(Configuration config) {
-
-//        config.addBrowser(900, 600, BrowserType.IE_11);
-//        config.addBrowser(900, 600, BrowserType.IE_10);
-        config.addBrowser(900, 600, BrowserType.EDGE_CHROMIUM);
-        config.addBrowser(900, 600, BrowserType.CHROME);
-        config.addBrowser(900, 600, BrowserType.FIREFOX);
+    private Configuration getUFGBrowserConfiguration(Configuration config) {
 
 //        config.addBrowser(1024, 1024, BrowserType.IE_11);
 //        config.addBrowser(1024, 1024, BrowserType.IE_10);
-//        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
+        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_LEGACY);
-//        config.addBrowser(1024, 1024, BrowserType.SAFARI);
+        config.addBrowser(1024, 1024, BrowserType.SAFARI);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
-//        config.addBrowser(1024, 1024, BrowserType.CHROME);
-//        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
+        config.addBrowser(1024, 1024, BrowserType.CHROME);
+        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.CHROME_TWO_VERSIONS_BACK);
-//        config.addBrowser(1024, 1024, BrowserType.FIREFOX);
-//        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
+        config.addBrowser(1024, 1024, BrowserType.FIREFOX);
+        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
 //
-//        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
 //        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.PORTRAIT);
 //        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.PORTRAIT);
 //        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.PORTRAIT);
@@ -258,8 +246,8 @@ public abstract class BaseTest {
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.LANDSCAPE);
+        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.LANDSCAPE);
+        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.LANDSCAPE);
         config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.LANDSCAPE);
         config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.LANDSCAPE);
 
