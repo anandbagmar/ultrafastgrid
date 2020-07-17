@@ -210,7 +210,7 @@ public abstract class BaseTest {
         String applitoolsApiKey = System.getenv("APPLITOOLS_API_KEY");
         System.out.println("API key: " + applitoolsApiKey);
         config.setApiKey(applitoolsApiKey);
-        eyes.setLogHandler(new StdoutLogHandler(true));
+//        eyes.setLogHandler(new StdoutLogHandler(true));
         config.setForceFullPageScreenshot(false);
         config.setSendDom(true);
         config = getUFGBrowserConfiguration(config);
@@ -229,14 +229,14 @@ public abstract class BaseTest {
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
         config.addBrowser(1024, 1024, BrowserType.CHROME);
-        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
+//        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.CHROME_TWO_VERSIONS_BACK);
         config.addBrowser(1024, 1024, BrowserType.FIREFOX);
-        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
+//        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
 //
-        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
-        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
+//        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
+//        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
 //        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.PORTRAIT);
 //        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.PORTRAIT);
 //        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.PORTRAIT);
@@ -246,10 +246,10 @@ public abstract class BaseTest {
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
-        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.LANDSCAPE);
-        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.LANDSCAPE);
-        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.LANDSCAPE);
-        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.LANDSCAPE);
+//        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.LANDSCAPE);
+//        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.LANDSCAPE);
+//        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.LANDSCAPE);
+//        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.LANDSCAPE);
 
         System.out.println("Running tests on Ultrafast Grid with '" + config.getBrowsersInfo().size() + "' browsers configurations");
         return config;
