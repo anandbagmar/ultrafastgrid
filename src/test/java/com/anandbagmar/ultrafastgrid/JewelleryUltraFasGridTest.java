@@ -27,7 +27,7 @@ public class JewelleryUltraFasGridTest extends BaseTest {
 
     @AfterClass
     public void afterClass() {
-        batch.setCompleted(true);
+//        batch.setCompleted(true);
         System.out.println("JewelleryUltraFasGridTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
     }
 
@@ -42,16 +42,8 @@ public class JewelleryUltraFasGridTest extends BaseTest {
 
     @Test(description = "Zales Necklaces, Web")
     public void zalesNecklacesWeb() {
-        runNecklaceTest("zalesNecklacesWeb", viewportSizeWeb);
-    }
-
-    @Test(description = "Zales Necklaces, MWeb")
-    public void zalesNecklacesMWeb() {
-        runNecklaceTest("zalesNecklacesMWeb", viewportSizeMWeb);
-    }
-
-    private void runNecklaceTest(String testName, RectangleSize viewportSize) {
-        System.out.println("Running test: " + testName);
+//        runNecklaceTest("zalesNecklacesWeb", viewportSizeWeb);
+        System.out.println("Running test: zalesNecklacesWeb");
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();
 
@@ -67,4 +59,42 @@ public class JewelleryUltraFasGridTest extends BaseTest {
 
         eyes.checkWindow("Necklaces");
     }
+
+    @Test(description = "Zales Necklaces, MWeb")
+    public void zalesNecklacesMWeb() {
+//        runNecklaceTest("zalesNecklacesMWeb", viewportSizeMWeb);
+        System.out.println("Running test: zalesNecklacesMWeb");
+        Eyes eyes = getEyes();
+        WebDriver driver = getDriver();
+
+        String url = "https://www.zales.com/necklaces";
+        driver.get(url);
+        waitFor(20);
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1.text-center.content-hdr\").style.color=\"red\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1.text-center.content-hdr\").innerText = \"Necklace\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.section-break.row.subsection.text-center\").querySelector(\"h3\").innerText = \"STYLISH DESIGNS FOR EVERY 1\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.exclusions.dark-text\").style = \"display: none;\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.exclusions.dark-text\").style = \"display: compact;\"");
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.owl-item\").querySelector(\"div.promo-text_description\").textContent = \"Discount Applied Automatically\"");
+
+        eyes.checkWindow("Necklaces");
+    }
+
+//    private void runNecklaceTest(String testName, RectangleSize viewportSize) {
+//        System.out.println("Running test: " + testName);
+//        Eyes eyes = getEyes();
+//        WebDriver driver = getDriver();
+//
+//        String url = "https://www.zales.com/necklaces";
+//        driver.get(url);
+//        waitFor(20);
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1.text-center.content-hdr\").style.color=\"red\"");
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1.text-center.content-hdr\").innerText = \"Necklace\"");
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.section-break.row.subsection.text-center\").querySelector(\"h3\").innerText = \"STYLISH DESIGNS FOR EVERY 1\"");
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.exclusions.dark-text\").style = \"display: none;\"");
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.exclusions.dark-text\").style = \"display: compact;\"");
+////        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.owl-item\").querySelector(\"div.promo-text_description\").textContent = \"Discount Applied Automatically\"");
+//
+//        eyes.checkWindow("Necklaces");
+//    }
 }

@@ -24,7 +24,7 @@ public class BlogEyesTest extends BlogBaseTest {
 
     @AfterClass
     public void afterClass() {
-        batch.setCompleted(true);
+//        batch.setCompleted(true);
         System.out.println("BlogEyesTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
     }
 

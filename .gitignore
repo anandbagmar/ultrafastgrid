@@ -4,3 +4,4 @@ build/
 out/
 *.jar
 reports/
+*.txt

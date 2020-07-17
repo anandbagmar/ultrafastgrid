@@ -42,6 +42,8 @@ public abstract class BaseTest {
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner));
 
         eyes.open(innerDriver, appName, method.getName(), viewportSize);
+        System.out.println("BeforeMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: " + eyes.getConfiguration().getBatch().getName() + ", BatchID: " + eyes.getConfiguration().getBatch().getId());
+        System.out.println("BeforeMethod: Eyes Hashcode: " + eyes.hashCode() + ", EyesRunner Hashcode: " + runner.hashCode());
     }
 
     private WebDriver createDriver(Method method) {
@@ -73,10 +75,13 @@ public abstract class BaseTest {
         TestExecutionContext testExecutionContext = getContext(Thread.currentThread().getId());
         Eyes eyes = testExecutionContext.getEyes();
         EyesRunner runner = testExecutionContext.getEyesRunner();
-        System.out.println("Running test: '" + result.getMethod().getMethodName() + "', Batch name: '" + eyes.getBatch().getName() + "', BatchID: " + eyes.getBatch().getId());
+        System.out.println("AfterMethod: Running test: '" + result.getMethod().getMethodName() + "', Batch name: '" + eyes.getBatch().getName() + "', BatchID: " + eyes.getBatch().getId());
+        System.out.println("AfterMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: " + eyes.getConfiguration().getBatch().getName() + ", BatchID: " + eyes.getConfiguration().getBatch().getId());
+        System.out.println("AfterMethod: Eyes Hashcode: " + eyes.hashCode() + ", EyesRunner Hashcode: " + runner.hashCode());
 
         quitDriver();
         eyes.closeAsync();
+        eyes.getBatch().setCompleted(false);
         eyes.getConfiguration().getBatch().setCompleted(false);
         eyes.getConfiguration().getBatch().setNotifyOnCompletion(false);
         TestResultsSummary allTestResults = runner.getAllTestResults(false);
@@ -93,6 +98,7 @@ public abstract class BaseTest {
         bt_afterMethod = LocalDateTime.now();
         long seconds = Duration.between(bt_beforeMethod, bt_afterMethod).toMillis() / 1000;
         System.out.println(">>> " + BaseTest.class.getSimpleName() + " - Tests: '" + result.getTestName() + "' took '" + seconds + "' seconds to run");
+        removeContext(Thread.currentThread().getId());
 //        Assert.assertFalse(mismatchFound, "Visual differences found in tests");
     }
 
@@ -137,6 +143,22 @@ public abstract class BaseTest {
         return hasMismatches;
     }
 
+    private void removeContext(long threadId) {
+        if (null != sessionContext) {
+            System.out.println("SessionContext is initialized");
+            dumpSessionContext();
+
+            TestExecutionContext testExecutionContext = sessionContext.remove(threadId);
+            if (null == testExecutionContext) {
+                System.out.println("ERROR: TestExecutionContext was already removed. This is crazy!");
+            } else {
+                System.out.println("Removed TestExecutionContext for test: " + testExecutionContext.getTestName());
+            }
+
+            dumpSessionContext();
+        }
+    }
+
     private void addContext(long threadId, TestExecutionContext testExecutionContext) {
         if (null == sessionContext) {
             System.out.println("SessionContext is null. Initializing");
@@ -145,8 +167,19 @@ public abstract class BaseTest {
             System.out.println("SessionContext already initialized");
         }
 
+        dumpSessionContext();
+
         System.out.println("Adding context for threadId: " + threadId);
         this.sessionContext.put(threadId, testExecutionContext);
+
+        dumpSessionContext();
+    }
+
+    private void dumpSessionContext() {
+        System.out.println("SessionContext dump");
+        for (Long aLong : this.sessionContext.keySet()) {
+            System.out.println("ThreadID: " + aLong + ", TestExecutionContext hashcode: " + this.sessionContext.get(aLong).hashCode());
+        }
     }
 
     protected TestExecutionContext getContext(long threadId) {
@@ -155,11 +188,13 @@ public abstract class BaseTest {
 
     protected WebDriver getDriver() {
         TestExecutionContext testExecutionContext = getContext(Thread.currentThread().getId());
+        System.out.println("Returning Driver for TestName: " + testExecutionContext.getTestName());
         return testExecutionContext.getInnerDriver();
     }
 
     protected Eyes getEyes() {
         TestExecutionContext testExecutionContext = getContext(Thread.currentThread().getId());
+        System.out.println("Returning Eyes for TestName: " + testExecutionContext.getTestName());
         return testExecutionContext.getEyes();
     }
 
@@ -176,11 +211,12 @@ public abstract class BaseTest {
         config.setStitchMode(StitchMode.CSS);
         String branchName = System.getenv("BRANCH_NAME");
         branchName = ((null != branchName) && (!branchName.trim().isEmpty())) ? branchName.toLowerCase() : "main";
+        System.out.println("Branch name: " + branchName);
         config.setBranchName(branchName);
         String applitoolsApiKey = System.getenv("APPLITOOLS_API_KEY");
         System.out.println("API key: " + applitoolsApiKey);
         config.setApiKey(applitoolsApiKey);
-//        eyes.setLogHandler(new StdoutLogHandler(false));
+        eyes.setLogHandler(new StdoutLogHandler(true));
         config.setForceFullPageScreenshot(false);
         config.setSendDom(true);
         config = getVGConfiguration(config);

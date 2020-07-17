@@ -32,7 +32,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
 
     @AfterClass
     public void afterClass() {
-        batch.setCompleted(true);
+//        batch.setCompleted(true);
         System.out.println("GitHubUltraFastGridTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
     }
 
@@ -98,11 +98,10 @@ public class GitHubUltraFastGridTest extends BaseTest {
         Assert.assertEquals(errorMessage, expectedErrorMessage);
     }
 
-    //    @Test(description = "Login to Github - 1st build, with Eyes")
+    @Test(description = "Login to Github - 1st build, with Eyes")
     public void loginGithubFirstBuildWithEyes() {
         Eyes eyes = getEyes();
-        WebDriver innerDriver = getDriver();
-        WebDriver driver = eyes.open(innerDriver, "github-" + viewportSize.toString(), "loginGithub" + "-" + viewportSize.toString(), viewportSize);
+        WebDriver driver = getDriver();
 
         String url = "https://github.com/login";
         driver.get(url);

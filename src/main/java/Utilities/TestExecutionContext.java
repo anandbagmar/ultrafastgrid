@@ -37,15 +37,11 @@ public class TestExecutionContext {
         return eyesRunner;
     }
 
-//    public void addEyes(Eyes eyes) {
-//        this.eyes = eyes;
-//    }
-//
-//    public void addEyesRunner(EyesRunner runner) {
-//        this.eyesRunner = runner;
-//    }
-//
-//    public void dump() {
+    public String getTestName() {
+        return this.testName;
+    }
+
+    //    public void dump() {
 //        System.out.println("TestExecutionContext: dump()");
 //        System.out.println("TestName        : " + this.testName);
 //        System.out.println("InnerDriver hash: " + this.innerDriver.hashCode());
