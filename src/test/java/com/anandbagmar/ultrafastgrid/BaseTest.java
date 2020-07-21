@@ -4,8 +4,6 @@ import Utilities.DriverUtils;
 import Utilities.TestExecutionContext;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
-import com.applitools.eyes.visualgrid.model.DeviceName;
-import com.applitools.eyes.visualgrid.model.ScreenOrientation;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,39 +12,73 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeSuite;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public abstract class BaseTest {
+    private Map<String, BatchInfo> batchContext;
     private Map<Long, TestExecutionContext> sessionContext;
     private LocalDateTime bt_beforeMethod;
     private LocalDateTime bt_afterMethod;
     private final int concurrency = 20;
 
-    protected void setupBeforeMethod(Method method) {
+    @BeforeSuite
+    protected void beforeSuite() {
+        System.out.println("--------------------------------------------------------------------");
+        String applitoolsDontCloseBatches = System.getenv("APPLITOOLS_DONT_CLOSE_BATCHES");
+        if (null == applitoolsDontCloseBatches) {
+            throw new IllegalArgumentException("Env variable 'APPLITOOLS_DONT_CLOSE_BATCHES' should be set to true before running these tests for batches to work correctly");
+        }
+        System.out.println("APPLITOOLS_DONT_CLOSE_BATCHES: env : " + applitoolsDontCloseBatches);
+        System.out.println("--------------------------------------------------------------------");
+    }
+    protected synchronized void setupBeforeMethod(Method method) {
         WebDriver innerDriver = createDriver(method);
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver));
     }
 
-    public void setupBeforeMethod(String appName, Method method, RectangleSize viewportSize, boolean useUFG, BatchInfo batch) {
-        System.out.println("Running test: '" + method.getName() + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
+    protected synchronized void setupBeforeMethod(String appName, Method method, RectangleSize viewportSize, boolean useUFG) {
+        String className = method.getDeclaringClass().getSimpleName();
+        String testName = method.getName();
+        BatchInfo batchInfo = getBatchInfoForTestClass(className);
+        if (null == batchInfo) {
+            System.out.println(className + ": BeforeMethod: " + testName + ": BatchInfo not yet created. Creating it now");
+            batchInfo = new BatchInfo(appName);
+            batchInfo.setNotifyOnCompletion(false);
+            String batchID = String.valueOf(randomWithRange());
+            System.out.println(className + ": BeforeMethod: " + testName + ": Setting BatchID to: '" + batchID + "'");
+            batchInfo.setId(batchID);
+            addBatchInfoForTestClass(className, batchInfo);
+            System.out.println(className + ": BeforeMethod: " + testName + ": App name: '" + appName + "', Batch name: '" + batchInfo.getName() + "', BatchID: '" + batchInfo.getId() + "'");
+        } else {
+            System.out.println(className + ": BeforeMethod: " + testName + ": BatchInfo already created. Reuse it. Batch name: '" + batchInfo.getName() + "', BatchID: '" + batchInfo.getId() + "'");
+        }
+
         WebDriver innerDriver = createDriver(method);
 
         EyesRunner runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
-        Eyes eyes = configureEyes(runner, batch);
+        Eyes eyes = configureEyes(runner, batchInfo);
 
-        addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner));
+        addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner, batchInfo));
 
         eyes.open(innerDriver, appName, method.getName(), viewportSize);
-        System.out.println("BeforeMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: " + eyes.getConfiguration().getBatch().getName() + ", BatchID: " + eyes.getConfiguration().getBatch().getId());
-        System.out.println("BeforeMethod: Eyes Hashcode: " + eyes.hashCode() + ", EyesRunner Hashcode: " + runner.hashCode());
+        System.out.println("BeforeMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: '" + eyes.getConfiguration().getBatch().getName() + "', BatchID: '" + eyes.getConfiguration().getBatch().getId() + "'");
+//        System.out.println("BeforeMethod: Eyes Hashcode: " + eyes.hashCode() + ", EyesRunner Hashcode: " + runner.hashCode() + ", Batch Hashcode: " + batchInfo.hashCode());
     }
 
-    private WebDriver createDriver(Method method) {
+    private long randomWithRange() {
+        Random random = new Random();
+        return new Date().getTime() - random.nextInt();
+    }
+
+    private synchronized WebDriver createDriver(Method method) {
         System.out.println("BaseTest: createDriver for test: '" + method.getName() + "' with ThreadID: " + Thread.currentThread().getId());
         bt_beforeMethod = LocalDateTime.now();
         WebDriver innerDriver = null;
@@ -75,14 +107,11 @@ public abstract class BaseTest {
         TestExecutionContext testExecutionContext = getContext(Thread.currentThread().getId());
         Eyes eyes = testExecutionContext.getEyes();
         EyesRunner runner = testExecutionContext.getEyesRunner();
-        System.out.println("AfterMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: " + eyes.getConfiguration().getBatch().getName() + ", BatchID: " + eyes.getConfiguration().getBatch().getId());
-        System.out.println("AfterMethod: Eyes Hashcode: " + eyes.hashCode() + ", EyesRunner Hashcode: " + runner.hashCode());
+        System.out.println("AfterMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: '" + eyes.getConfiguration().getBatch().getName() + "', BatchID: '" + eyes.getConfiguration().getBatch().getId() + "'");
+//        System.out.println("AfterMethod: Eyes Hashcode: " + eyes.hashCode() + ", EyesRunner Hashcode: " + runner.hashCode());
 
         quitDriver();
         eyes.closeAsync();
-//        eyes.getBatch().setCompleted(false);
-//        eyes.getConfiguration().getBatch().setCompleted(false);
-//        eyes.getConfiguration().getBatch().setNotifyOnCompletion(false);
         TestResultsSummary allTestResults = runner.getAllTestResults(false);
         TestResultContainer[] results = allTestResults.getAllResults();
         System.out.println("Number of results for test - " + result.getMethod().getMethodName() + ": " + results.length);
@@ -97,8 +126,8 @@ public abstract class BaseTest {
         bt_afterMethod = LocalDateTime.now();
         long seconds = Duration.between(bt_beforeMethod, bt_afterMethod).toMillis() / 1000;
         System.out.println(">>> " + BaseTest.class.getSimpleName() + " - Tests: '" + result.getTestName() + "' took '" + seconds + "' seconds to run");
-        removeContext(Thread.currentThread().getId());
-        Assert.assertFalse(mismatchFound, "Visual differences found in tests");
+//        removeContext(Thread.currentThread().getId());
+//        Assert.assertFalse(mismatchFound, "Visual differences found in tests");
     }
 
     protected void waitFor(int numSeconds) {
@@ -137,12 +166,12 @@ public abstract class BaseTest {
                 result.getMissing(),
                 (result.isAborted() ? "aborted" : "no"));
         System.out.println("Results available here: " + result.getUrl());
-        boolean hasMismatches = result.getMismatches() != 0;
-        System.out.println("result: has mismatches: " + hasMismatches);
+        boolean hasMismatches = result.getMismatches() != 0 || result.isAborted();
+        System.out.println("result: has mismatches or was aborted: " + hasMismatches);
         return hasMismatches;
     }
 
-    private void removeContext(long threadId) {
+    private synchronized void removeContext(long threadId) {
         if (null != sessionContext) {
             System.out.println("SessionContext is initialized");
             dumpSessionContext();
@@ -158,7 +187,7 @@ public abstract class BaseTest {
         }
     }
 
-    private void addContext(long threadId, TestExecutionContext testExecutionContext) {
+    private synchronized void addContext(long threadId, TestExecutionContext testExecutionContext) {
         if (null == sessionContext) {
             System.out.println("SessionContext is null. Initializing");
             sessionContext = new HashMap<Long, TestExecutionContext>();
@@ -174,30 +203,57 @@ public abstract class BaseTest {
         dumpSessionContext();
     }
 
-    private void dumpSessionContext() {
+    private synchronized void dumpSessionContext() {
         System.out.println("SessionContext dump");
         for (Long aLong : this.sessionContext.keySet()) {
             System.out.println("ThreadID: " + aLong + ", TestExecutionContext hashcode: " + this.sessionContext.get(aLong).hashCode());
         }
     }
 
-    protected TestExecutionContext getContext(long threadId) {
+    protected synchronized TestExecutionContext getContext(long threadId) {
         return this.sessionContext.get(threadId);
     }
 
-    protected WebDriver getDriver() {
+    protected synchronized BatchInfo getBatchInfoForTestClass(String className) {
+        if (null == batchContext) {
+//            System.out.println("getBatchInfoForTestClass: BatchContext is null. Initializing");
+            batchContext = new HashMap<String, BatchInfo>();
+        } else {
+//            System.out.println("getBatchInfoForTestClass: BatchContext already initialized.");
+        }
+        BatchInfo batchInfo = this.batchContext.get(className);
+        if (null != batchInfo) {
+            System.out.println("getBatchInfoForTestClass: ClassName: '" + className + "', BatchInfo: '" + batchInfo + "', Batch name: '" + batchInfo.getName() + "', BatchID: '" + batchInfo.getId() + "', Batch Hashcode: " + batchInfo.hashCode() + ", Number of BatchInfo in BatchContext: " + batchContext.size());
+        } else {
+            System.out.println("getBatchInfoForTestClass: ClassName: '" + className + "', BatchInfo: '" + batchInfo + ", Number of BatchInfo in BatchContext: " + batchContext.size());
+        }
+        return batchInfo;
+    }
+
+    protected synchronized void addBatchInfoForTestClass(String className, BatchInfo batchInfo) {
+        if (null == batchContext) {
+//            System.out.println("addBatchInfoForTestClass: ClassName: '" + className + "':, BatchContext is null. Initializing");
+            batchContext = new HashMap<>();
+        } else {
+//            System.out.println("addBatchInfoForTestClass: ClassName: '" + className + "':, BatchContext already initialized.");
+        }
+        batchContext.put(className, batchInfo);
+//        System.out.println("addBatchInfoForTestClass: Added BatchInfo for ClassName: '" + className + "', Batch name: '" + batchInfo.getName() + "', BatchID: '" + batchInfo.getId() + "', Batch Hashcode: " + batchInfo.hashCode() + "', Number of BatchInfo in BatchContext: " + batchContext.size());
+    }
+
+    protected synchronized WebDriver getDriver() {
         TestExecutionContext testExecutionContext = getContext(Thread.currentThread().getId());
         System.out.println("Returning Driver for TestName: " + testExecutionContext.getTestName());
         return testExecutionContext.getInnerDriver();
     }
 
-    protected Eyes getEyes() {
+    protected synchronized Eyes getEyes() {
         TestExecutionContext testExecutionContext = getContext(Thread.currentThread().getId());
         System.out.println("Returning Eyes for TestName: " + testExecutionContext.getTestName());
         return testExecutionContext.getEyes();
     }
 
-    private Eyes configureEyes(EyesRunner runner, BatchInfo batch) {
+    private synchronized Eyes configureEyes(EyesRunner runner, BatchInfo batch) {
         Eyes eyes = new Eyes(runner);
         Configuration config = eyes.getConfiguration();
         config.setBatch(batch);
@@ -219,7 +275,7 @@ public abstract class BaseTest {
         return eyes;
     }
 
-    private Configuration getUFGBrowserConfiguration(Configuration config) {
+    private synchronized Configuration getUFGBrowserConfiguration(Configuration config) {
 
 //        config.addBrowser(1024, 1024, BrowserType.IE_11);
 //        config.addBrowser(1024, 1024, BrowserType.IE_10);

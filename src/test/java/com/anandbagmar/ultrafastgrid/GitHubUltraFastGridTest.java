@@ -1,14 +1,11 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.selenium.Eyes;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -17,27 +14,14 @@ import java.lang.reflect.Method;
 public class GitHubUltraFastGridTest extends BaseTest {
     private final String appName = "github-eyes-ufg-test";
     RectangleSize viewportSize = new RectangleSize(1024, 768);
-    private static BatchInfo batch;
 
     String expectedH1Text = "SignIn";
     String expectedUserName = "Username";
     String expectedErrorMessage = "Incorrect credentials";
 
-    @BeforeClass
-    public void beforeClass() {
-        batch = new BatchInfo(appName);
-        batch.setNotifyOnCompletion(false);
-        System.out.println("GitHubUltraFastGridTest: BeforeClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
-    }
-
-    @AfterClass
-    public void afterClass() {
-        System.out.println("GitHubUltraFastGridTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
-    }
-
-    @BeforeMethod (alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSize, true, batch);
+        setupBeforeMethod(appName, method, viewportSize, true);
     }
 
     //    @Test(description = "Login to Github - 1st build, no Eyes")
@@ -146,5 +130,4 @@ public class GitHubUltraFastGridTest extends BaseTest {
         System.out.println(String.format("passwordLabel  : '%s'", passwordLabel));
         System.out.println(String.format("errorMessage  : '%s'", errorMessage));
     }
-
 }

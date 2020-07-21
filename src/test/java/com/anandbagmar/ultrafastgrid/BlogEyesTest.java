@@ -13,23 +13,10 @@ import java.lang.reflect.Method;
 public class BlogEyesTest extends BlogBaseTest {
     private final String appName = "blog-eyes-classic-test";
     private final RectangleSize viewportSize = new RectangleSize(1024, 768);
-    private static BatchInfo batch;
-
-    @BeforeClass
-    public void beforeClass() {
-        batch = new BatchInfo(appName);
-        batch.setNotifyOnCompletion(false);
-        System.out.println("BlogEyesTest: BeforeClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
-    }
-
-    @AfterClass
-    public void afterClass() {
-        System.out.println("BlogEyesTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
-    }
 
     @BeforeMethod (alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSize, false, batch);
+        setupBeforeMethod(appName, method, viewportSize, false);
     }
 
     @Test(description = "Blogs in 2019")

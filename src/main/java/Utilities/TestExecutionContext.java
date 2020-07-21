@@ -1,5 +1,6 @@
 package Utilities;
 
+import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.EyesRunner;
 import com.applitools.eyes.selenium.Eyes;
 import org.openqa.selenium.WebDriver;
@@ -9,20 +10,22 @@ public class TestExecutionContext {
     private String testName;
     private Eyes eyes;
     private EyesRunner eyesRunner;
+    private BatchInfo batchInfo;
 
     public TestExecutionContext(String testName, WebDriver innerDriver) {
-        instantiateTestExecutionContext(testName, innerDriver, null, null);
+        instantiateTestExecutionContext(testName, innerDriver, null, null, null);
     }
 
-    public TestExecutionContext(String testName, WebDriver innerDriver, Eyes eyes, EyesRunner runner) {
-        instantiateTestExecutionContext(testName, innerDriver, eyes, runner);
+    public TestExecutionContext(String testName, WebDriver innerDriver, Eyes eyes, EyesRunner runner, BatchInfo batchInfo) {
+        instantiateTestExecutionContext(testName, innerDriver, eyes, runner, batchInfo);
     }
 
-    private void instantiateTestExecutionContext(String testName, WebDriver innerDriver, Eyes eyes, EyesRunner runner) {
+    private void instantiateTestExecutionContext(String testName, WebDriver innerDriver, Eyes eyes, EyesRunner runner, BatchInfo batchInfo) {
         this.testName = testName;
         this.innerDriver = innerDriver;
         this.eyes = eyes;
         this.eyesRunner = runner;
+        this.batchInfo = batchInfo;
     }
 
     public WebDriver getInnerDriver() {
@@ -40,6 +43,8 @@ public class TestExecutionContext {
     public String getTestName() {
         return this.testName;
     }
+
+    public BatchInfo getBatchInfo() { return this.batchInfo; }
 
     //    public void dump() {
 //        System.out.println("TestExecutionContext: dump()");

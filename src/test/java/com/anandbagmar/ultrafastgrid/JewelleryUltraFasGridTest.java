@@ -1,14 +1,11 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.selenium.Eyes;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -17,23 +14,10 @@ import java.lang.reflect.Method;
 public class JewelleryUltraFasGridTest extends BaseTest {
     private final String appName = "jewellery-eyes-ufg-test";
     RectangleSize viewportSizeWeb = new RectangleSize(1024, 768);
-    private static BatchInfo batch;
-
-    @BeforeClass
-    public void beforeClass() {
-        batch = new BatchInfo(appName);
-        batch.setNotifyOnCompletion(false);
-        System.out.println("JewelleryUltraFasGridTest: BeforeClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
-    }
-
-    @AfterClass
-    public void afterClass() {
-        System.out.println("JewelleryUltraFasGridTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
-    }
 
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSizeWeb, true, batch);
+        setupBeforeMethod(appName, method, viewportSizeWeb, true);
     }
 
     @Test(description = "Zales Necklaces, Web")
@@ -44,7 +28,8 @@ public class JewelleryUltraFasGridTest extends BaseTest {
 
         String url = "https://www.zales.com/necklaces";
         driver.get(url);
-        waitFor(20);
+        eyes.checkWindow("Necklaces-before wait");
+        waitFor(25);
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1.text-center.content-hdr\").style.color=\"red\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1.text-center.content-hdr\").innerText = \"Necklace\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.section-break.row.subsection.text-center\").querySelector(\"h3\").innerText = \"STYLISH DESIGNS FOR EVERY 1\"");
@@ -96,12 +81,12 @@ public class JewelleryUltraFasGridTest extends BaseTest {
 //        String popup1 = "//button[@class = 'con-x']";
 //        closePopup(driver, popup1);
 
-        waitFor(3);
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: none;\"");
+//        waitFor(3);
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: none;\"");
         eyes.checkWindow("Changed Image");
         waitFor(3);
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: block;\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelectorAll(\"div.fullwidthbanner.section-break\").forEach(f => { f.style = \"display: none;\" })");
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: block;\"");
+//        ((JavascriptExecutor) driver).executeScript("document.querySelectorAll(\"div.fullwidthbanner.section-break\").forEach(f => { f.style = \"display: none;\" })");
         eyes.checkWindow("Banners");
 
     }
