@@ -32,41 +32,21 @@ public class BlogEyesTest extends BlogBaseTest {
         setupBeforeMethod(appName, method, viewportSize, false, batch);
     }
 
-//    @Test(description = "Blogs in 2019")
+    @Test(description = "Blogs in 2019")
     public void blogIn2019() {
         String url = "https://essenceoftesting.blogspot.com";
         Eyes eyes = getEyes();
         checkBlogPages(eyes, url);
     }
 
-//    @Test(description = "Blogs in 2019 - Mobile View")
+    @Test(description = "Blogs in 2019 - Mobile View")
     public void blogIn2019MobileView() {
         String url = "https://essenceoftesting.blogspot.com/?m=1";
         checkBlogPages(getEyes(), url);
     }
 
-//    @Test(description = "Blog profile")
+    @Test(description = "Blog profile")
     public void seeProfile() {
         checkProfilePage(getEyes());
     }
-
-//    @Test(description = "Blogs in 2019")
-//    public void blogIn2019_firefox() {
-//        Eyes eyes = getEyes();
-//        String url = "https://essenceoftesting.blogspot.com";
-//        eyes.setForceFullPageScreenshot(false);
-//        checkBlogPages(eyes, url);
-//    }
-//
-//    @Test(description = "Blogs in 2019 - Mobile View")
-//    public void blogIn2019MobileView_firefox() {
-//        String url = "https://essenceoftesting.blogspot.com/?m=1";
-//        checkBlogPages(getEyes(), url);
-//    }
-//
-//    @Test(description = "Blog profile")
-//    public void seeProfile_firefox() {
-//        checkProfilePage(getEyes());
-//    }
-
 }
