@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 
@@ -97,7 +98,7 @@ public abstract class BaseTest {
         long seconds = Duration.between(bt_beforeMethod, bt_afterMethod).toMillis() / 1000;
         System.out.println(">>> " + BaseTest.class.getSimpleName() + " - Tests: '" + result.getTestName() + "' took '" + seconds + "' seconds to run");
         removeContext(Thread.currentThread().getId());
-//        Assert.assertFalse(mismatchFound, "Visual differences found in tests");
+        Assert.assertFalse(mismatchFound, "Visual differences found in tests");
     }
 
     protected void waitFor(int numSeconds) {
@@ -225,13 +226,13 @@ public abstract class BaseTest {
         config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_LEGACY);
-        config.addBrowser(1024, 1024, BrowserType.SAFARI);
+        config.addBrowser(1200, 1024, BrowserType.SAFARI);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
-        config.addBrowser(1024, 1024, BrowserType.CHROME);
+        config.addBrowser(1024, 1200, BrowserType.CHROME);
 //        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.CHROME_TWO_VERSIONS_BACK);
-        config.addBrowser(1024, 1024, BrowserType.FIREFOX);
+        config.addBrowser(1200, 1200, BrowserType.FIREFOX);
 //        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
 //

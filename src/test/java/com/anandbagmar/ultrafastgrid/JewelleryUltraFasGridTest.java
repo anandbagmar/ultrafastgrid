@@ -1,10 +1,8 @@
 package com.anandbagmar.ultrafastgrid;
 
 import com.applitools.eyes.BatchInfo;
-import com.applitools.eyes.MatchLevel;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.selenium.Eyes;
-import com.applitools.eyes.selenium.fluent.Target;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -19,7 +17,6 @@ import java.lang.reflect.Method;
 public class JewelleryUltraFasGridTest extends BaseTest {
     private final String appName = "jewellery-eyes-ufg-test";
     RectangleSize viewportSizeWeb = new RectangleSize(1024, 768);
-//    RectangleSize viewportSizeMWeb = new RectangleSize(480, 640);
     private static BatchInfo batch;
 
     @BeforeClass
@@ -34,13 +31,9 @@ public class JewelleryUltraFasGridTest extends BaseTest {
         System.out.println("JewelleryUltraFasGridTest: AfterClass: App name: '" + appName + "', Batch name: '" + batch.getName() + "', BatchID: " + batch.getId());
     }
 
-    @BeforeMethod (alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-//        if (method.getName().toLowerCase().contains("mweb")) {
-//            setupBeforeMethod(appName, method, viewportSizeMWeb, true, batch);
-//        } else {
-            setupBeforeMethod(appName, method, viewportSizeWeb, true, batch);
-//        }
+        setupBeforeMethod(appName, method, viewportSizeWeb, true, batch);
     }
 
     @Test(description = "Zales Necklaces, Web")
@@ -61,25 +54,7 @@ public class JewelleryUltraFasGridTest extends BaseTest {
         eyes.checkWindow("Necklaces");
     }
 
-//    @Test(description = "Zales Necklaces, MWeb")
-    public void zalesNecklacesMWeb() {
-        System.out.println("Running test: zalesNecklacesMWeb");
-        Eyes eyes = getEyes();
-        WebDriver driver = getDriver();
-
-        String url = "https://www.zales.com/necklaces";
-        driver.get(url);
-        waitFor(20);
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1.text-center.content-hdr\").style.color=\"red\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1.text-center.content-hdr\").innerText = \"Necklace\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.section-break.row.subsection.text-center\").querySelector(\"h3\").innerText = \"STYLISH DESIGNS FOR EVERY 1\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.exclusions.dark-text\").style = \"display: none;\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.exclusions.dark-text\").style = \"display: compact;\"");
-
-        eyes.checkWindow("Necklaces");
-    }
-
-    @Test(description = "Zales - Contact-Us, MWeb")
+    @Test(description = "Zales - Contact-Us")
     public void zalesContactUsWeb() {
         System.out.println("Running test: zalesNecklacesWeb");
         Eyes eyes = getEyes();
@@ -105,6 +80,30 @@ public class JewelleryUltraFasGridTest extends BaseTest {
         driver.findElement(By.xpath("//div[@class = 'menu-open']")).click();
         waitFor(3);
         eyes.checkWindow("Menu");
+    }
+
+    @Test(description = "Zales - collections")
+    public void zalesCollections() {
+        System.out.println("Running test: zalesCollections");
+        Eyes eyes = getEyes();
+        WebDriver driver = getDriver();
+
+        String url = "https://www.zales.com/collections";
+        driver.get(url);
+        eyes.checkWindow("Collections");
+
+        waitFor(35);
+//        String popup1 = "//button[@class = 'con-x']";
+//        closePopup(driver, popup1);
+
+        waitFor(3);
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: none;\"");
+        eyes.checkWindow("Changed Image");
+        waitFor(3);
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: block;\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelectorAll(\"div.fullwidthbanner.section-break\").forEach(f => { f.style = \"display: none;\" })");
+        eyes.checkWindow("Banners");
+
     }
 
     private void closePopup(WebDriver driver, String locator) {
