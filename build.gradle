@@ -25,7 +25,7 @@ test {
     useTestNG() {
         options {
             parallel = 'methods'
-            threadCount = 5
+            threadCount = 2
         }
         reports.html.enabled = true
         reports.html.setDestination(file("${project.logDir}/html"))
