@@ -77,18 +77,41 @@ public class JewelleryUltraFasGridTest extends BaseTest {
         driver.get(url);
         eyes.checkWindow("Collections");
 
-        waitFor(35);
+        waitFor(15);
 //        String popup1 = "//button[@class = 'con-x']";
 //        closePopup(driver, popup1);
 
 //        waitFor(3);
-//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: none;\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: none;\"");
         eyes.checkWindow("Changed Image");
         waitFor(3);
-//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: block;\"");
-//        ((JavascriptExecutor) driver).executeScript("document.querySelectorAll(\"div.fullwidthbanner.section-break\").forEach(f => { f.style = \"display: none;\" })");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.m-0\").style = \"display: block;\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelectorAll(\"div.fullwidthbanner.section-break\").forEach(f => { f.style = \"display: none;\" })");
         eyes.checkWindow("Banners");
 
+    }
+
+    @Test(description = "Zales - navigation")
+    public void zalesNavigation() {
+        System.out.println("Running test: zalesNavigation");
+        Eyes eyes = getEyes();
+        WebDriver driver = getDriver();
+
+        driver.get("https://www.zales.com");
+        waitFor(10);
+        eyes.checkWindow("Home");
+
+        driver.get("https://www.zales.com/watches");
+        waitFor(3);
+        eyes.checkWindow("Watches");
+
+        driver.get("https://www.zales.com/watches/movado/c/0108010800");
+        waitFor(3);
+        eyes.checkWindow("Watches-Movado");
+
+        driver.get("https://www.zales.com/compare");
+        waitFor(3);
+        eyes.checkWindow("Compare");
     }
 
     private void closePopup(WebDriver driver, String locator) {
