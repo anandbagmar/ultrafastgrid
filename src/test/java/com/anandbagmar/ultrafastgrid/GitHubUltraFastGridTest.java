@@ -88,6 +88,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
 
         String url = "https://github.com/login";
         driver.get(url);
+        eyes.checkWindow("onLoad");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.footer\").style=\"display: none;\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"label[for='login_field']\").innerText=\"" + expectedUserName + "\"");
@@ -96,6 +97,33 @@ public class GitHubUltraFastGridTest extends BaseTest {
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.footer\").style=\"display: none;\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"label[for='login_field']\").innerText=\"" + expectedUserName + "\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").innerText=\"" + expectedErrorMessage + "\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").style.background=\"white\"");
+        eyes.checkWindow("loginErrors");
+
+        String h1Text = driver.findElement(By.cssSelector("h1")).getText();
+        String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
+        String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
+        String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
+        System.out.println(String.format("H1 text: '%s'", h1Text));
+        System.out.println(String.format("usernameLabel  : '%s'", usernameLabel));
+        System.out.println(String.format("passwordLabel  : '%s'", passwordLabel));
+        System.out.println(String.format("errorMessage  : '%s'", errorMessage));
+    }
+
+    @Test(description = "Login to Github - 1st build, with Eyes")
+    public void loginGithubSecondBuildWithEyes() {
+        Eyes eyes = getEyes();
+        WebDriver driver = getDriver();
+
+        String url = "https://github.com/login";
+        driver.get(url);
+        eyes.checkWindow("onLoad");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"label[for='login_field']\").innerText=\"" + expectedUserName + "\"");
+        eyes.checkWindow("loginPage");
+        driver.findElement(By.cssSelector("input.btn")).click();
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").innerText=\"" + expectedErrorMessage + "\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").style.background=\"white\"");
         eyes.checkWindow("loginErrors");
