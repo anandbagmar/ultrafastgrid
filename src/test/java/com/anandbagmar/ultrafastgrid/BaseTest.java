@@ -55,6 +55,9 @@ public abstract class BaseTest {
             batchInfo = new BatchInfo(appName);
             batchInfo.setNotifyOnCompletion(false);
             String batchID = String.valueOf(randomWithRange());
+            if (null != System.getenv("JENKINS_HOME")) {
+                batchID = System.getenv("APPLITOOLS_BATCH_ID");
+            }
             System.out.println(className + ": BeforeMethod: " + testName + ": Setting BatchID to: '" + batchID + "'");
             batchInfo.setId(batchID);
             addBatchInfoForTestClass(className, batchInfo);
