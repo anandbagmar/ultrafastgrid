@@ -6,6 +6,16 @@ apply plugin: 'eclipse'
 group 'com.anandbagmar'
 version '1.0-SNAPSHOT'
 
+buildscript {
+    ext {
+        gradleVersionProperty = '6.5'
+        testNGVersion = '6+'
+        webdriverManagerVersion = '4.+'
+        jsonSimpleVersion = '1.+'
+        applitoolsVersion = '3+'
+    }
+}
+
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
@@ -13,10 +23,10 @@ repositories {
 }
 
 dependencies {
-    compile "org.testng:testng:6.+"
-    compile "com.applitools:eyes-selenium-java3:3.+"
-    compile group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '3.+'
-    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.+'
+    compile 'org.testng:testng:' + testNGVersion
+    compile 'com.applitools:eyes-selenium-java3:' + applitoolsVersion
+    compile 'io.github.bonigarcia:webdrivermanager:' + webdriverManagerVersion
+    compile 'com.googlecode.json-simple:json-simple:' + jsonSimpleVersion
 }
 
 project.ext.logDir = "${rootDir}/reports"
@@ -62,4 +72,8 @@ clean.doLast {
     println "Created reports directory"
 }
 
-//test.dependsOn clean
+test.dependsOn clean
+
+wrapper {
+    gradleVersion = gradleVersionProperty
+}
