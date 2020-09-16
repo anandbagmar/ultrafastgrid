@@ -19,7 +19,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
     String expectedUserName = "Username";
     String expectedErrorMessage = "Incorrect credentials";
 
-    @BeforeMethod(alwaysRun = true)
+//    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
         setupBeforeMethod(appName, method, viewportSize, true, true);
     }
@@ -81,7 +81,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         Assert.assertEquals(errorMessage, expectedErrorMessage);
     }
 
-    @Test(description = "Login to Github - 1st build, with Eyes")
+//    @Test(description = "Login to Github - 1st build, with Eyes")
     public void loginGithubFirstBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();
@@ -111,7 +111,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         System.out.println(String.format("errorMessage  : '%s'", errorMessage));
     }
 
-    @Test(description = "Login to Github - 1st build, with Eyes")
+//    @Test(description = "Login to Github - 1st build, with Eyes")
     public void loginGithubSecondBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();
@@ -138,7 +138,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         System.out.println(String.format("errorMessage  : '%s'", errorMessage));
     }
 
-    @Test(description = "Validate error messages on Login to Github - new build, with Eyes")
+//    @Test(description = "Validate error messages on Login to Github - new build, with Eyes")
     public void loginGithubNewBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();
