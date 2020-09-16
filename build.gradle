@@ -22,6 +22,9 @@ dependencies {
 project.ext.logDir = "${rootDir}/reports"
 
 test {
+    doFirst {
+        environment "APPLITOOLS_DONT_CLOSE_BATCHES", "true"
+    }
     useTestNG() {
         options {
             parallel = 'methods'
