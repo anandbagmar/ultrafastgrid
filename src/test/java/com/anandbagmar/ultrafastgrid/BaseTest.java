@@ -289,10 +289,10 @@ public abstract class BaseTest {
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
         config.addBrowser(1024, 1200, BrowserType.CHROME);
-        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
+//        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.CHROME_TWO_VERSIONS_BACK);
         config.addBrowser(1200, 1200, BrowserType.FIREFOX);
-        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
+//        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
 
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
@@ -304,11 +304,11 @@ public abstract class BaseTest {
         config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.PORTRAIT);
 
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.LANDSCAPE);
-        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.LANDSCAPE);
-        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
+//        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.LANDSCAPE);
+//        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.LANDSCAPE);
-        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.LANDSCAPE);
+//        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.LANDSCAPE);
 
         System.out.println("Running tests on Ultrafast Grid with '" + config.getBrowsersInfo().size() + "' browsers configurations");
