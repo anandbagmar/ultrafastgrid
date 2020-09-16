@@ -16,7 +16,7 @@ public class BlogEyesTest extends BlogBaseTest {
         setupBeforeMethod(appName, method, viewportSize, false, false);
     }
 
-    @Test(description = "Blogs in 2019")
+//    @Test(description = "Blogs in 2019")
     public void blogIn2019() {
         String url = "https://essenceoftesting.blogspot.com";
         Eyes eyes = getEyes();
