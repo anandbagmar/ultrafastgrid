@@ -44,7 +44,9 @@ public class TestExecutionContext {
         return this.testName;
     }
 
-    public BatchInfo getBatchInfo() { return this.batchInfo; }
+    public BatchInfo getBatchInfo() {
+        return this.batchInfo;
+    }
 
     //    public void dump() {
 //        System.out.println("TestExecutionContext: dump()");

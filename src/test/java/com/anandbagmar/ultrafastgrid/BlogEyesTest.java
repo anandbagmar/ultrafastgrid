@@ -1,10 +1,7 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.selenium.Eyes;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -14,7 +11,7 @@ public class BlogEyesTest extends BlogBaseTest {
     private final String appName = "blog-eyes-classic-test";
     private final RectangleSize viewportSize = new RectangleSize(1024, 768);
 
-    @BeforeMethod (alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
         setupBeforeMethod(appName, method, viewportSize, false, false);
     }

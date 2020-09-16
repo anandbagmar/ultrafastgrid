@@ -11,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeSuite;
@@ -25,11 +24,11 @@ import java.util.Map;
 import java.util.Random;
 
 public abstract class BaseTest {
+    private final int concurrency = 20;
     private Map<String, BatchInfo> batchContext;
     private Map<Long, TestExecutionContext> sessionContext;
     private LocalDateTime bt_beforeMethod;
     private LocalDateTime bt_afterMethod;
-    private final int concurrency = 20;
 
     @BeforeSuite
     protected void beforeSuite() {
@@ -41,6 +40,7 @@ public abstract class BaseTest {
         System.out.println("APPLITOOLS_DONT_CLOSE_BATCHES: env : " + applitoolsDontCloseBatches);
         System.out.println("--------------------------------------------------------------------");
     }
+
     protected synchronized void setupBeforeMethod(Method method) {
         WebDriver innerDriver = createDriver(method);
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver));
