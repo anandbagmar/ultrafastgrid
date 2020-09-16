@@ -23,7 +23,7 @@ public class BlogEyesTest extends BlogBaseTest {
         checkBlogPages(eyes, url);
     }
 
-    @Test(description = "Blogs in 2019 - Mobile View")
+//    @Test(description = "Blogs in 2019 - Mobile View")
     public void blogIn2019MobileView() {
         String url = "https://essenceoftesting.blogspot.com/?m=1";
         checkBlogPages(getEyes(), url);
