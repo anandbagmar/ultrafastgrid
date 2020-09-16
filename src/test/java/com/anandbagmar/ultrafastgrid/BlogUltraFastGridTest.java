@@ -16,7 +16,7 @@ public class BlogUltraFastGridTest extends BlogBaseTest {
 
     @BeforeMethod (alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSize, true);
+        setupBeforeMethod(appName, method, viewportSize, true, false);
     }
 
     @Test(description = "Blogs in 2019")

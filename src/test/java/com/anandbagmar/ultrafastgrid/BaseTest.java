@@ -4,6 +4,8 @@ import Utilities.DriverUtils;
 import Utilities.TestExecutionContext;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
+import com.applitools.eyes.visualgrid.model.DeviceName;
+import com.applitools.eyes.visualgrid.model.ScreenOrientation;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -44,7 +46,7 @@ public abstract class BaseTest {
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver));
     }
 
-    protected synchronized void setupBeforeMethod(String appName, Method method, RectangleSize viewportSize, boolean useUFG) {
+    protected synchronized void setupBeforeMethod(String appName, Method method, RectangleSize viewportSize, boolean useUFG, boolean takeFullPageScreenshot) {
         String className = method.getDeclaringClass().getSimpleName();
         String testName = method.getName();
         BatchInfo batchInfo = getBatchInfoForTestClass(className);
@@ -64,7 +66,7 @@ public abstract class BaseTest {
         WebDriver innerDriver = createDriver(method);
 
         EyesRunner runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
-        Eyes eyes = configureEyes(runner, batchInfo);
+        Eyes eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot);
 
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner, batchInfo));
 
@@ -253,12 +255,13 @@ public abstract class BaseTest {
         return testExecutionContext.getEyes();
     }
 
-    private synchronized Eyes configureEyes(EyesRunner runner, BatchInfo batch) {
+    private synchronized Eyes configureEyes(EyesRunner runner, BatchInfo batch, boolean takeFullPageScreenshot) {
         Eyes eyes = new Eyes(runner);
         Configuration config = eyes.getConfiguration();
         config.setBatch(batch);
         config.setMatchLevel(MatchLevel.STRICT);
         config.setStitchMode(StitchMode.CSS);
+        config.setForceFullPageScreenshot(takeFullPageScreenshot);
         config.getBatch().setNotifyOnCompletion(false);
         String branchName = System.getenv("BRANCH_NAME");
         branchName = ((null != branchName) && (!branchName.trim().isEmpty())) ? branchName.toLowerCase() : "main";
@@ -268,7 +271,6 @@ public abstract class BaseTest {
         System.out.println("API key: " + applitoolsApiKey);
         config.setApiKey(applitoolsApiKey);
         eyes.setLogHandler(new StdoutLogHandler(true));
-        config.setForceFullPageScreenshot(false);
         config.setSendDom(true);
         config = getUFGBrowserConfiguration(config);
         eyes.setConfiguration(config);
@@ -277,13 +279,14 @@ public abstract class BaseTest {
 
     private synchronized Configuration getUFGBrowserConfiguration(Configuration config) {
 
-        config.addBrowser(1024, 1024, BrowserType.IE_11);
-        config.addBrowser(1024, 1024, BrowserType.IE_10);
+//        config.addBrowser(1024, 1024, BrowserType.IE_11);
+//        config.addBrowser(1024, 1024, BrowserType.IE_10);
         config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_LEGACY);
         config.addBrowser(1200, 1024, BrowserType.SAFARI);
-        config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
+//        config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
+//        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
         config.addBrowser(1024, 1200, BrowserType.CHROME);
         config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
@@ -291,21 +294,21 @@ public abstract class BaseTest {
         config.addBrowser(1200, 1200, BrowserType.FIREFOX);
         config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
-//
+
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.PORTRAIT);
 //        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.PORTRAIT);
 //        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.PORTRAIT);
 //        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.PORTRAIT);
-//
+        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.PORTRAIT);
+
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
+        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.LANDSCAPE);
+        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.LANDSCAPE);
+        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.LANDSCAPE);
 
         System.out.println("Running tests on Ultrafast Grid with '" + config.getBrowsersInfo().size() + "' browsers configurations");

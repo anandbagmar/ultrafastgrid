@@ -12,12 +12,12 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 public class JewelleryUltraFasGridTest extends BaseTest {
-    private final String appName = "jewellery-eyes-ufg-test";
+    private final String appName = "zales-eyes-ufg-test";
     RectangleSize viewportSizeWeb = new RectangleSize(1024, 768);
 
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSizeWeb, true);
+        setupBeforeMethod(appName, method, viewportSizeWeb, true, true);
     }
 
     @Test(description = "Zales Necklaces, Web")

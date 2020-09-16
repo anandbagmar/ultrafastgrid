@@ -21,7 +21,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
 
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSize, true);
+        setupBeforeMethod(appName, method, viewportSize, true, true);
     }
 
     //    @Test(description = "Login to Github - 1st build, no Eyes")
@@ -119,7 +119,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         String url = "https://github.com/login";
         driver.get(url);
         eyes.checkWindow("onLoad");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"label[for='login_field']\").innerText=\"" + expectedUserName + "\"");
         eyes.checkWindow("loginPage");
         driver.findElement(By.cssSelector("input.btn")).click();
