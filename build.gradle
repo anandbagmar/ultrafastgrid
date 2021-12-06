@@ -75,5 +75,5 @@ clean.doLast {
 test.dependsOn clean
 
 wrapper {
-    gradleVersion = gradleVersionProperty
+    gradleVersion = 6.5
 }
