@@ -1,27 +1,20 @@
 package com.anandbagmar.ultrafastgrid;
 
-import Utilities.DriverUtils;
-import Utilities.TestExecutionContext;
+import Utilities.*;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
-import com.applitools.eyes.visualgrid.model.DeviceName;
 import com.applitools.eyes.visualgrid.model.ScreenOrientation;
-import com.applitools.eyes.visualgrid.services.VisualGridRunner;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeSuite;
+import com.applitools.eyes.visualgrid.model.*;
+import com.applitools.eyes.visualgrid.services.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.*;
+import org.openqa.selenium.firefox.*;
+import org.testng.*;
+import org.testng.annotations.*;
 
-import java.lang.reflect.Method;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.lang.reflect.*;
+import java.time.*;
+import java.util.*;
 
 public abstract class BaseTest {
     private final int concurrency = 20;
@@ -29,6 +22,7 @@ public abstract class BaseTest {
     private Map<Long, TestExecutionContext> sessionContext;
     private LocalDateTime bt_beforeMethod;
     private LocalDateTime bt_afterMethod;
+    private EyesRunner runner;
 
     @BeforeSuite
     protected void beforeSuite() {
@@ -38,6 +32,10 @@ public abstract class BaseTest {
             throw new IllegalArgumentException("Env variable 'APPLITOOLS_DONT_CLOSE_BATCHES' should be set to true before running these tests for batches to work correctly");
         }
         System.out.println("APPLITOOLS_DONT_CLOSE_BATCHES: env : " + applitoolsDontCloseBatches);
+
+        boolean useUFG = Boolean.parseBoolean(System.getenv("USE_UFG"));
+        System.out.println("useUFG: " + useUFG);
+        runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
         System.out.println("--------------------------------------------------------------------");
     }
 
@@ -68,9 +66,7 @@ public abstract class BaseTest {
 
         WebDriver innerDriver = createDriver(method);
 
-        EyesRunner runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
         Eyes eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot);
-
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner, batchInfo));
 
         eyes.open(innerDriver, appName, method.getName(), viewportSize);
@@ -94,7 +90,7 @@ public abstract class BaseTest {
                 DriverUtils.getPathForChromeDriverFromMachine();
                 ChromeOptions options = new ChromeOptions();
                 options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-                options.addArguments("headless");
+//                options.addArguments("headless");
                 innerDriver = new ChromeDriver(options);
                 break;
             case "firefox":
@@ -111,28 +107,29 @@ public abstract class BaseTest {
     public void afterMethod(ITestResult result) {
         TestExecutionContext testExecutionContext = getContext(Thread.currentThread().getId());
         Eyes eyes = testExecutionContext.getEyes();
-        EyesRunner runner = testExecutionContext.getEyesRunner();
         System.out.println("AfterMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: '" + eyes.getConfiguration().getBatch().getName() + "', BatchID: '" + eyes.getConfiguration().getBatch().getId() + "'");
-//        System.out.println("AfterMethod: Eyes Hashcode: " + eyes.hashCode() + ", EyesRunner Hashcode: " + runner.hashCode());
 
         quitDriver();
         eyes.closeAsync();
-        TestResultsSummary allTestResults = runner.getAllTestResults(false);
-        TestResultContainer[] results = allTestResults.getAllResults();
-        System.out.println("Number of results for test - " + result.getMethod().getMethodName() + ": " + results.length);
-        boolean mismatchFound = false;
-        for (TestResultContainer eachResult : results) {
-            Throwable ex = results[0].getException();
-            TestResults testResult = eachResult.getTestResults();
-            mismatchFound = mismatchFound || handleTestResults(ex, testResult);
-        }
-        System.out.println("Overall mismatchFound: " + mismatchFound);
 
         bt_afterMethod = LocalDateTime.now();
         long seconds = Duration.between(bt_beforeMethod, bt_afterMethod).toMillis() / 1000;
         System.out.println(">>> " + BaseTest.class.getSimpleName() + " - Tests: '" + result.getTestName() + "' took '" + seconds + "' seconds to run");
-//        removeContext(Thread.currentThread().getId());
-//        Assert.assertFalse(mismatchFound, "Visual differences found in tests");
+        removeContext(Thread.currentThread().getId());
+    }
+
+    @AfterSuite(alwaysRun = true)
+    public void afterSuite() {
+        TestResultsSummary allTestResults = runner.getAllTestResults(false);
+        TestResultContainer[] results = allTestResults.getAllResults();
+        System.out.println("Number of tests: " + results.length);
+        boolean mismatchFound = false;
+        for (TestResultContainer eachResult : results) {
+            Throwable ex = results[0].getException();
+            TestResults testResult = eachResult.getTestResults();
+            mismatchFound = handleTestResults(ex, testResult) || mismatchFound;
+        }
+        System.out.println("Overall mismatchFound: " + mismatchFound);
     }
 
     protected void waitFor(int numSeconds) {
@@ -159,7 +156,7 @@ public abstract class BaseTest {
     }
 
     protected boolean handleTestResults(Throwable ex, TestResults result) {
-        System.out.println("\t\t" + result);
+        System.out.println("\tTest Name: " + result.getName() + " :: " + result);
         System.out.printf("\t\tName = '%s', \nBrowser = %s,OS = %s, viewport = %dx%d, matched = %d, mismatched = %d, missing = %d, aborted = %s\n",
                 result.getName(),
                 result.getHostApp(),
@@ -273,7 +270,7 @@ public abstract class BaseTest {
         String applitoolsApiKey = System.getenv("APPLITOOLS_API_KEY");
         System.out.println("API key: " + applitoolsApiKey);
         config.setApiKey(applitoolsApiKey);
-        eyes.setLogHandler(new StdoutLogHandler(true));
+//        eyes.setLogHandler(new StdoutLogHandler(true));
         config.setSendDom(true);
         config = getUFGBrowserConfiguration(config);
         eyes.setConfiguration(config);
@@ -284,26 +281,25 @@ public abstract class BaseTest {
 
 //        config.addBrowser(1024, 1024, BrowserType.IE_11);
 //        config.addBrowser(1024, 1024, BrowserType.IE_10);
-        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
+//        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_LEGACY);
-        config.addBrowser(1200, 1024, BrowserType.SAFARI);
+//        config.addBrowser(1200, 1024, BrowserType.SAFARI);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
-//        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
-        config.addBrowser(1024, 1200, BrowserType.CHROME);
+//        config.addBrowser(1024, 1200, BrowserType.CHROME);
 //        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.CHROME_TWO_VERSIONS_BACK);
-        config.addBrowser(1200, 1200, BrowserType.FIREFOX);
-//        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
-//        config.addBrowser(1024, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
+//        config.addBrowser(1200, 1200, BrowserType.FIREFOX);
+        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
+        config.addBrowser(1024, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
 
-//        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
         config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
         config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.PORTRAIT);
         config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.PORTRAIT);
 
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.LANDSCAPE);

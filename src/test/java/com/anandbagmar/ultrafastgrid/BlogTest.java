@@ -8,12 +8,12 @@ import java.lang.reflect.Method;
 
 public class BlogTest extends BlogBaseTest {
 
-//    @BeforeMethod(alwaysRun = true)
+    //    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
         setupBeforeMethod(method);
     }
 
-//    @AfterMethod(alwaysRun = true)
+    //    @AfterMethod(alwaysRun = true)
     public void afterMethod(ITestResult result) {
         quitDriver();
     }

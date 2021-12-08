@@ -1,15 +1,13 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.applitools.eyes.RectangleSize;
-import com.applitools.eyes.selenium.Eyes;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import com.applitools.eyes.*;
+import com.applitools.eyes.selenium.*;
+import com.applitools.eyes.selenium.fluent.*;
+import org.openqa.selenium.*;
+import org.testng.*;
+import org.testng.annotations.*;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 public class GitHubUltraFastGridTest extends BaseTest {
     private final String appName = "github-eyes-ufg-test";
@@ -19,12 +17,12 @@ public class GitHubUltraFastGridTest extends BaseTest {
     String expectedUserName = "Username";
     String expectedErrorMessage = "Incorrect credentials";
 
-//    @BeforeMethod(alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
         setupBeforeMethod(appName, method, viewportSize, true, true);
     }
 
-    //    @Test(description = "Login to Github - 1st build, no Eyes")
+//    @Test(description = "Login to Github - 1st build, no Eyes")
     public void loginGithubFirstBuildNoEyes() {
         WebDriver driver = getDriver();
 
@@ -55,7 +53,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         Assert.assertEquals(errorMessage, expectedErrorMessage);
     }
 
-    //    @Test(description = "Validate error messages on Login to Github - new build, no Eyes")
+//    @Test(description = "Validate error messages on Login to Github - new build, no Eyes")
     public void loginGithubNewBuildNoEyes() {
         WebDriver driver = getDriver();
         String expectedH1Text = "SignIn";
@@ -81,7 +79,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         Assert.assertEquals(errorMessage, expectedErrorMessage);
     }
 
-//    @Test(description = "Login to Github - 1st build, with Eyes")
+    @Test(description = "Login to Github - 1st build, with Eyes")
     public void loginGithubFirstBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();
@@ -111,7 +109,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         System.out.println(String.format("errorMessage  : '%s'", errorMessage));
     }
 
-//    @Test(description = "Login to Github - 1st build, with Eyes")
+    @Test(description = "Login to Github - 1st build, with Eyes")
     public void loginGithubSecondBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();
@@ -138,7 +136,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         System.out.println(String.format("errorMessage  : '%s'", errorMessage));
     }
 
-//    @Test(description = "Validate error messages on Login to Github - new build, with Eyes")
+    @Test(description = "Validate error messages on Login to Github - new build, with Eyes")
     public void loginGithubNewBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();
