@@ -42,10 +42,10 @@ public class GitHubUltraFastGridTest extends BaseTest {
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
         String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
-        System.out.println(String.format("H1 text: '%s'", h1Text));
-        System.out.println(String.format("usernameLabel  : '%s'", usernameLabel));
-        System.out.println(String.format("passwordLabel  : '%s'", passwordLabel));
-        System.out.println(String.format("errorMessage  : '%s'", errorMessage));
+        System.out.printf("H1 text: '%s'%n", h1Text);
+        System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
+        System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
+        System.out.printf("errorMessage  : '%s'%n", errorMessage);
 
         Assert.assertEquals(h1Text, expectedH1Text);
         Assert.assertEquals(usernameLabel, expectedUserName);
@@ -68,10 +68,10 @@ public class GitHubUltraFastGridTest extends BaseTest {
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
         String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
-        System.out.println(String.format("H1 text: '%s'", h1Text));
-        System.out.println(String.format("usernameLabel  : '%s'", usernameLabel));
-        System.out.println(String.format("passwordLabel  : '%s'", passwordLabel));
-        System.out.println(String.format("errorMessage  : '%s'", errorMessage));
+        System.out.printf("H1 text: '%s'%n", h1Text);
+        System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
+        System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
+        System.out.printf("errorMessage  : '%s'%n", errorMessage);
 
         Assert.assertEquals(h1Text, expectedH1Text);
         Assert.assertEquals(usernameLabel, expectedUserName);
@@ -103,10 +103,10 @@ public class GitHubUltraFastGridTest extends BaseTest {
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
         String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
-        System.out.println(String.format("H1 text: '%s'", h1Text));
-        System.out.println(String.format("usernameLabel  : '%s'", usernameLabel));
-        System.out.println(String.format("passwordLabel  : '%s'", passwordLabel));
-        System.out.println(String.format("errorMessage  : '%s'", errorMessage));
+        System.out.printf("H1 text: '%s'%n", h1Text);
+        System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
+        System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
+        System.out.printf("errorMessage  : '%s'%n", errorMessage);
     }
 
     @Test(description = "Login to Github - 1st build, with Eyes")
@@ -130,10 +130,10 @@ public class GitHubUltraFastGridTest extends BaseTest {
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
         String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
-        System.out.println(String.format("H1 text: '%s'", h1Text));
-        System.out.println(String.format("usernameLabel  : '%s'", usernameLabel));
-        System.out.println(String.format("passwordLabel  : '%s'", passwordLabel));
-        System.out.println(String.format("errorMessage  : '%s'", errorMessage));
+        System.out.printf("H1 text: '%s'%n", h1Text);
+        System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
+        System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
+        System.out.printf("errorMessage  : '%s'%n", errorMessage);
     }
 
     @Test(description = "Validate error messages on Login to Github - new build, with Eyes")
@@ -151,9 +151,9 @@ public class GitHubUltraFastGridTest extends BaseTest {
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
         String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
-        System.out.println(String.format("H1 text: '%s'", h1Text));
-        System.out.println(String.format("usernameLabel  : '%s'", usernameLabel));
-        System.out.println(String.format("passwordLabel  : '%s'", passwordLabel));
-        System.out.println(String.format("errorMessage  : '%s'", errorMessage));
+        System.out.printf("H1 text: '%s'%n", h1Text);
+        System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
+        System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
+        System.out.printf("errorMessage  : '%s'%n", errorMessage);
     }
 }
