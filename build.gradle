@@ -1,6 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 
 group 'com.anandbagmar'
@@ -8,8 +8,8 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     ext {
-        gradleVersionProperty = '6.5'
-        testNGVersion = '6+'
+        gradleVersionProperty = '7.3.3'
+        testNGVersion = '7+'
         webdriverManagerVersion = '4.+'
         jsonSimpleVersion = '1.+'
         applitoolsVersion = '3+'
@@ -19,14 +19,13 @@ buildscript {
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
-
 }
 
 dependencies {
-    compile 'org.testng:testng:' + testNGVersion
-    compile 'com.applitools:eyes-selenium-java3:' + applitoolsVersion
-    compile 'io.github.bonigarcia:webdrivermanager:' + webdriverManagerVersion
-    compile 'com.googlecode.json-simple:json-simple:' + jsonSimpleVersion
+    implementation 'org.testng:testng:' + testNGVersion
+    implementation 'com.applitools:eyes-selenium-java3:' + applitoolsVersion
+    implementation 'io.github.bonigarcia:webdrivermanager:' + webdriverManagerVersion
+    implementation 'com.googlecode.json-simple:json-simple:' + jsonSimpleVersion
 }
 
 project.ext.logDir = "${rootDir}/reports"
@@ -75,5 +74,5 @@ clean.doLast {
 test.dependsOn clean
 
 wrapper {
-    gradleVersion = 6.5
+    gradleVersion = project.gradleVersionProperty
 }
