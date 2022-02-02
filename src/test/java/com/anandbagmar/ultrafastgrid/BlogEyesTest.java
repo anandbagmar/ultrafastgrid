@@ -1,11 +1,10 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.applitools.eyes.RectangleSize;
-import com.applitools.eyes.selenium.Eyes;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import com.applitools.eyes.*;
+import com.applitools.eyes.selenium.*;
+import org.testng.annotations.*;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 public class BlogEyesTest extends BlogBaseTest {
     private final String appName = "blog-eyes-classic-test";
@@ -16,14 +15,14 @@ public class BlogEyesTest extends BlogBaseTest {
         setupBeforeMethod(appName, method, viewportSize, false, false);
     }
 
-//    @Test(description = "Blogs in 2019")
+    //    @Test(description = "Blogs in 2019")
     public void blogIn2019() {
         String url = "https://essenceoftesting.blogspot.com";
         Eyes eyes = getEyes();
         checkBlogPages(eyes, url);
     }
 
-//    @Test(description = "Blogs in 2019 - Mobile View")
+    //    @Test(description = "Blogs in 2019 - Mobile View")
     public void blogIn2019MobileView() {
         String url = "https://essenceoftesting.blogspot.com/?m=1";
         checkBlogPages(getEyes(), url);

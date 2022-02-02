@@ -1,11 +1,10 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.applitools.eyes.RectangleSize;
-import com.applitools.eyes.selenium.Eyes;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import com.applitools.eyes.*;
+import com.applitools.eyes.selenium.*;
+import org.testng.annotations.*;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 public class BlogUltraFastGridTest extends BlogBaseTest {
     private final String appName = "blog-eyes-ufg-test";

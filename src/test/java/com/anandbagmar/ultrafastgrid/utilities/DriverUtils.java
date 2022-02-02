@@ -1,6 +1,6 @@
 package com.anandbagmar.ultrafastgrid.utilities;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.*;
 
 public class DriverUtils {
     public static String getPathForChromeDriverFromMachine() {

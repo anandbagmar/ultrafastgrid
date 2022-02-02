@@ -1,26 +1,21 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.applitools.eyes.RectangleSize;
-import com.applitools.eyes.selenium.Eyes;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import com.applitools.eyes.*;
+import com.applitools.eyes.selenium.*;
+import org.openqa.selenium.*;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 public class JewelleryUltraFasGridTest extends BaseTest {
     private final String appName = "zales-eyes-ufg-test";
     RectangleSize viewportSizeWeb = new RectangleSize(1024, 768);
 
-//    @BeforeMethod(alwaysRun = true)
+    //    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
         setupBeforeMethod(appName, method, viewportSizeWeb, true, true);
     }
 
-//    @Test(description = "Zales Necklaces, Web")
+    //    @Test(description = "Zales Necklaces, Web")
     public void zalesNecklacesWeb() {
         System.out.println("Running test: zalesNecklacesWeb");
         Eyes eyes = getEyes();
@@ -39,7 +34,7 @@ public class JewelleryUltraFasGridTest extends BaseTest {
         eyes.checkWindow("Necklaces");
     }
 
-//    @Test(description = "Zales - Contact-Us")
+    //    @Test(description = "Zales - Contact-Us")
     public void zalesContactUsWeb() {
         System.out.println("Running test: zalesNecklacesWeb");
         Eyes eyes = getEyes();
@@ -67,7 +62,7 @@ public class JewelleryUltraFasGridTest extends BaseTest {
         eyes.checkWindow("Menu");
     }
 
-//    @Test(description = "Zales - collections")
+    //    @Test(description = "Zales - collections")
     public void zalesCollections() {
         System.out.println("Running test: zalesCollections");
         Eyes eyes = getEyes();
@@ -91,7 +86,7 @@ public class JewelleryUltraFasGridTest extends BaseTest {
 
     }
 
-//    @Test(description = "Zales - navigation")
+    //    @Test(description = "Zales - navigation")
     public void zalesNavigation() {
         System.out.println("Running test: zalesNavigation");
         Eyes eyes = getEyes();

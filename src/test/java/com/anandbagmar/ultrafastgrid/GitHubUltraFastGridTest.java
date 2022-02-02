@@ -2,7 +2,6 @@ package com.anandbagmar.ultrafastgrid;
 
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
-import com.applitools.eyes.selenium.fluent.*;
 import org.openqa.selenium.*;
 import org.testng.*;
 import org.testng.annotations.*;
@@ -22,7 +21,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         setupBeforeMethod(appName, method, viewportSize, true, true);
     }
 
-//    @Test(description = "Login to Github - 1st build, no Eyes")
+    //    @Test(description = "Login to Github - 1st build, no Eyes")
     public void loginGithubFirstBuildNoEyes() {
         WebDriver driver = getDriver();
 
@@ -53,7 +52,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         Assert.assertEquals(errorMessage, expectedErrorMessage);
     }
 
-//    @Test(description = "Validate error messages on Login to Github - new build, no Eyes")
+    //    @Test(description = "Validate error messages on Login to Github - new build, no Eyes")
     public void loginGithubNewBuildNoEyes() {
         WebDriver driver = getDriver();
         String expectedH1Text = "SignIn";

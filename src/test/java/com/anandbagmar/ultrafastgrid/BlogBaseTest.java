@@ -1,9 +1,9 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.applitools.eyes.selenium.Eyes;
-import org.openqa.selenium.WebDriver;
+import com.applitools.eyes.selenium.*;
+import org.openqa.selenium.*;
 
-import java.util.HashMap;
+import java.util.*;
 
 public abstract class BlogBaseTest extends BaseTest {
     protected HashMap<String, String> getBlogPosts() {

@@ -1,9 +1,8 @@
 package com.anandbagmar.ultrafastgrid.utilities;
 
-import com.applitools.eyes.BatchInfo;
-import com.applitools.eyes.EyesRunner;
-import com.applitools.eyes.selenium.Eyes;
-import org.openqa.selenium.WebDriver;
+import com.applitools.eyes.*;
+import com.applitools.eyes.selenium.*;
+import org.openqa.selenium.*;
 
 public class TestExecutionContext {
     private WebDriver innerDriver;
