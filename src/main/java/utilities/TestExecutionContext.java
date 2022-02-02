@@ -1,4 +1,4 @@
-package Utilities;
+package utilities;
 
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.EyesRunner;

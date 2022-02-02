@@ -1,6 +1,6 @@
 package com.anandbagmar.ultrafastgrid;
 
-import Utilities.*;
+import utilities.*;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
 import com.applitools.eyes.visualgrid.model.ScreenOrientation;
