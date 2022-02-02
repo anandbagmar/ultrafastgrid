@@ -1,3 +1,7 @@
+[![CodeQL](https://github.com/anandbagmar/ultrafastgrid/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/anandbagmar/ultrafastgrid/actions/workflows/codeql-analysis.yml)
+
+[![Java CI with Gradle](https://github.com/anandbagmar/ultrafastgrid/actions/workflows/buildInCI.yml/badge.svg)](https://github.com/anandbagmar/ultrafastgrid/actions/workflows/buildInCI.yml)
+
 ## Prerequisites
 * Get the appropriate version of the chrome driver and gecko driver
 * Download the selenium-server-standalone jar (I used v3.9.1 and placed it in the lib directory) 
