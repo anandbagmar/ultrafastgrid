@@ -1,4 +1,4 @@
-package utilities;
+package com.anandbagmar.ultrafastgrid.utilities;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 

@@ -1,4 +1,4 @@
-package utilities;
+package com.anandbagmar.ultrafastgrid.utilities;
 
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.EyesRunner;
