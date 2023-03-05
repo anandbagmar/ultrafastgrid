@@ -281,26 +281,26 @@ public abstract class BaseTest {
 
 //        config.addBrowser(1024, 1024, BrowserType.IE_11);
 //        config.addBrowser(1024, 1024, BrowserType.IE_10);
-//        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
+        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.EDGE_LEGACY);
-//        config.addBrowser(1200, 1024, BrowserType.SAFARI);
+        config.addBrowser(1200, 1024, BrowserType.SAFARI);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
-//        config.addBrowser(1024, 1200, BrowserType.CHROME);
+        config.addBrowser(1024, 1200, BrowserType.CHROME);
 //        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
 //        config.addBrowser(1024, 1024, BrowserType.CHROME_TWO_VERSIONS_BACK);
-//        config.addBrowser(1200, 1200, BrowserType.FIREFOX);
-        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
-        config.addBrowser(1024, 1024, BrowserType.FIREFOX_TWO_VERSIONS_BACK);
-
-        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
-        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
+        config.addBrowser(1200, 1200, BrowserType.FIREFOX);
+//        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
+//        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
+//        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.Galaxy_S20, ScreenOrientation.PORTRAIT);
         config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.PORTRAIT);
-        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.PORTRAIT);
-        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.PORTRAIT);
-        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.PORTRAIT);
-        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.PORTRAIT);
+//        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.PORTRAIT);
+//        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.PORTRAIT);
+//        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.PORTRAIT);
+//        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.iPhone_11_Pro_Max, ScreenOrientation.PORTRAIT);
 
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.LANDSCAPE);
