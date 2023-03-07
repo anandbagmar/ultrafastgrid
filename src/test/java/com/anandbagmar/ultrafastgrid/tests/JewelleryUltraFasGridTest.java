@@ -1,5 +1,6 @@
-package com.anandbagmar.ultrafastgrid;
+package com.anandbagmar.ultrafastgrid.tests;
 
+import com.anandbagmar.ultrafastgrid.BaseTest;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
 import org.openqa.selenium.*;
@@ -9,10 +10,11 @@ import java.lang.reflect.*;
 public class JewelleryUltraFasGridTest extends BaseTest {
     private final String appName = "zales-eyes-ufg-test";
     RectangleSize viewportSizeWeb = new RectangleSize(1024, 768);
+    private boolean isDisabled = false;
 
     //    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSizeWeb, true, true);
+        setupBeforeMethod(appName, method, viewportSizeWeb, true, isDisabled);
     }
 
     //    @Test(description = "Zales Necklaces, Web")

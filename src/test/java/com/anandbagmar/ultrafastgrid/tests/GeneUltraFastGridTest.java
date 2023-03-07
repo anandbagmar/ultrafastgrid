@@ -1,5 +1,6 @@
-package com.anandbagmar.ultrafastgrid;
+package com.anandbagmar.ultrafastgrid.tests;
 
+import com.anandbagmar.ultrafastgrid.BaseTest;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
 import org.openqa.selenium.*;
@@ -9,10 +10,11 @@ import java.lang.reflect.*;
 public class GeneUltraFastGridTest extends BaseTest {
     private final String appName = "gene-eyes-ufg-test";
     RectangleSize viewportSize = new RectangleSize(1024, 768);
+    private boolean isDisabled = false;
 
     //    @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSize, true, true);
+        setupBeforeMethod(appName, method, viewportSize, true, isDisabled);
     }
 
 //    @Test(description = "Gene - 1st build, with Eyes")

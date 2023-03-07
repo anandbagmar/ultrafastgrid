@@ -1,20 +1,28 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.anandbagmar.ultrafastgrid.utilities.*;
+import com.anandbagmar.ultrafastgrid.utilities.DriverUtils;
+import com.anandbagmar.ultrafastgrid.utilities.TestExecutionContext;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
+import com.applitools.eyes.visualgrid.model.DeviceName;
 import com.applitools.eyes.visualgrid.model.ScreenOrientation;
-import com.applitools.eyes.visualgrid.model.*;
-import com.applitools.eyes.visualgrid.services.*;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.*;
-import org.openqa.selenium.firefox.*;
-import org.testng.*;
-import org.testng.annotations.*;
+import com.applitools.eyes.visualgrid.services.VisualGridRunner;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 
-import java.lang.reflect.*;
-import java.time.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public abstract class BaseTest {
     private final int concurrency = 20;
@@ -44,7 +52,7 @@ public abstract class BaseTest {
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver));
     }
 
-    protected synchronized void setupBeforeMethod(String appName, Method method, RectangleSize viewportSize, boolean useUFG, boolean takeFullPageScreenshot) {
+    protected synchronized void setupBeforeMethod(String appName, Method method, RectangleSize viewportSize, boolean takeFullPageScreenshot, boolean isDisabled) {
         String className = method.getDeclaringClass().getSimpleName();
         String testName = method.getName();
         BatchInfo batchInfo = getBatchInfoForTestClass(className);
@@ -66,7 +74,7 @@ public abstract class BaseTest {
 
         WebDriver innerDriver = createDriver(method);
 
-        Eyes eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot);
+        Eyes eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot, isDisabled);
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner, batchInfo));
 
         eyes.open(innerDriver, appName, method.getName(), viewportSize);
@@ -83,9 +91,9 @@ public abstract class BaseTest {
         System.out.println("BaseTest: createDriver for test: '" + method.getName() + "' with ThreadID: " + Thread.currentThread().getId());
         bt_beforeMethod = LocalDateTime.now();
         WebDriver innerDriver = null;
-        String browser = (null == System.getenv("browser")) ? "chrome" : System.getenv("browser");
+        String browser = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
         System.out.println("Running test with browser - " + browser);
-        switch (browser) {
+        switch (browser.toLowerCase()) {
             case "chrome":
                 DriverUtils.getPathForChromeDriverFromMachine();
                 ChromeOptions options = new ChromeOptions();
@@ -129,7 +137,7 @@ public abstract class BaseTest {
             TestResults testResult = eachResult.getTestResults();
             mismatchFound = handleTestResults(ex, testResult) || mismatchFound;
         }
-        System.out.println("Overall mismatchFound: " + mismatchFound);
+        System.out.println("Overall Visual Validaiton failed? - " + mismatchFound);
     }
 
     protected void waitFor(int numSeconds) {
@@ -156,36 +164,35 @@ public abstract class BaseTest {
     }
 
     protected boolean handleTestResults(Throwable ex, TestResults result) {
-        System.out.println("\tTest Name: " + result.getName() + " :: " + result);
-        System.out.printf("\t\tName = '%s', \nBrowser = %s,OS = %s, viewport = %dx%d, matched = %d, mismatched = %d, missing = %d, aborted = %s\n",
-                result.getName(),
-                result.getHostApp(),
-                result.getHostOS(),
-                result.getHostDisplaySize().getWidth(),
-                result.getHostDisplaySize().getHeight(),
-                result.getMatches(),
-                result.getMismatches(),
-                result.getMissing(),
-                (result.isAborted() ? "aborted" : "no"));
-        System.out.println("Results available here: " + result.getUrl());
+        if (!result.getStatus().equals(TestResultsStatus.Disabled)) {
+            System.out.println("\tTest Name: " + result.getName() + " :: " + result);
+            System.out.println("\tTest status: " + result.getStatus());
+            System.out.printf("\t\tName = '%s', \nBrowser = %s,OS = %s, viewport = %dx%d, matched = %d, mismatched = %d, missing = %d, aborted = %s\n",
+                    result.getName(),
+                    result.getHostApp(),
+                    result.getHostOS(),
+                    result.getHostDisplaySize().getWidth(),
+                    result.getHostDisplaySize().getHeight(),
+                    result.getMatches(),
+                    result.getMismatches(),
+                    result.getMissing(),
+                    (result.isAborted() ? "aborted" : "no"));
+            System.out.println("Results available here: " + result.getUrl());
+        }
         boolean hasMismatches = result.getMismatches() != 0 || result.isAborted();
-        System.out.println("result: has mismatches or was aborted: " + hasMismatches);
+        System.out.println("Visual validation failed? - " + hasMismatches);
         return hasMismatches;
     }
 
     private synchronized void removeContext(long threadId) {
         if (null != sessionContext) {
             System.out.println("SessionContext is initialized");
-            dumpSessionContext();
-
             TestExecutionContext testExecutionContext = sessionContext.remove(threadId);
             if (null == testExecutionContext) {
                 System.out.println("ERROR: TestExecutionContext was already removed. This is crazy!");
             } else {
                 System.out.println("Removed TestExecutionContext for test: " + testExecutionContext.getTestName());
             }
-
-            dumpSessionContext();
         }
     }
 
@@ -197,19 +204,8 @@ public abstract class BaseTest {
             System.out.println("SessionContext already initialized");
         }
 
-        dumpSessionContext();
-
         System.out.println("Adding context for threadId: " + threadId);
         this.sessionContext.put(threadId, testExecutionContext);
-
-        dumpSessionContext();
-    }
-
-    private synchronized void dumpSessionContext() {
-        System.out.println("SessionContext dump");
-        for (Long aLong : this.sessionContext.keySet()) {
-            System.out.println("ThreadID: " + aLong + ", TestExecutionContext hashcode: " + this.sessionContext.get(aLong).hashCode());
-        }
     }
 
     protected synchronized TestExecutionContext getContext(long threadId) {
@@ -255,10 +251,12 @@ public abstract class BaseTest {
         return testExecutionContext.getEyes();
     }
 
-    private synchronized Eyes configureEyes(EyesRunner runner, BatchInfo batch, boolean takeFullPageScreenshot) {
+    private synchronized Eyes configureEyes(EyesRunner runner, BatchInfo batch, boolean takeFullPageScreenshot, boolean isDisabled) {
         Eyes eyes = new Eyes(runner);
+        System.out.println("Is Applitools Visual AI enabled? - " + !isDisabled);
         Configuration config = eyes.getConfiguration();
         config.setBatch(batch);
+        eyes.setIsDisabled(isDisabled);
         config.setMatchLevel(MatchLevel.STRICT);
         config.setStitchMode(StitchMode.CSS);
         config.setForceFullPageScreenshot(takeFullPageScreenshot);

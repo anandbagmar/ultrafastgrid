@@ -1,5 +1,6 @@
-package com.anandbagmar.ultrafastgrid;
+package com.anandbagmar.ultrafastgrid.tests;
 
+import com.anandbagmar.ultrafastgrid.BaseTest;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
 import org.openqa.selenium.*;
@@ -15,10 +16,11 @@ public class GitHubUltraFastGridTest extends BaseTest {
     String expectedH1Text = "SignIn";
     String expectedUserName = "Username";
     String expectedErrorMessage = "Incorrect credentials";
+    private boolean isDisabled = false;
 
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSize, true, true);
+        setupBeforeMethod(appName, method, viewportSize, true, isDisabled);
     }
 
     //    @Test(description = "Login to Github - 1st build, no Eyes")
@@ -34,13 +36,13 @@ public class GitHubUltraFastGridTest extends BaseTest {
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.footer\").style=\"display: none;\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"label[for='login_field']\").innerText=\"" + expectedUserName + "\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").innerText=\"" + expectedErrorMessage + "\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").style.background=\"white\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.px-2\").innerText=\"" + expectedErrorMessage + "\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.px-2\").style.background=\"white\"");
 
         String h1Text = driver.findElement(By.cssSelector("h1")).getText();
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
-        String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
+        String errorMessage = driver.findElement(By.cssSelector("div.px-2")).getText();
         System.out.printf("H1 text: '%s'%n", h1Text);
         System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
         System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
@@ -66,7 +68,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         String h1Text = driver.findElement(By.cssSelector("h1")).getText();
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
-        String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
+        String errorMessage = driver.findElement(By.cssSelector("div.px-2")).getText();
         System.out.printf("H1 text: '%s'%n", h1Text);
         System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
         System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
@@ -94,14 +96,15 @@ public class GitHubUltraFastGridTest extends BaseTest {
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.footer\").style=\"display: none;\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"label[for='login_field']\").innerText=\"" + expectedUserName + "\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").innerText=\"" + expectedErrorMessage + "\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").style.background=\"white\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.px-2\")" +
+                                                            ".innerText=\"" + expectedErrorMessage + "\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.px-2\").style.background=\"white\"");
         eyes.checkWindow("loginErrors");
 
         String h1Text = driver.findElement(By.cssSelector("h1")).getText();
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
-        String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
+        String errorMessage = driver.findElement(By.cssSelector("div.px-2")).getText();
         System.out.printf("H1 text: '%s'%n", h1Text);
         System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
         System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
@@ -121,14 +124,14 @@ public class GitHubUltraFastGridTest extends BaseTest {
         eyes.checkWindow("loginPage");
         driver.findElement(By.cssSelector("input.btn")).click();
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").innerText=\"" + expectedErrorMessage + "\"");
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.container-lg.px-2\").style.background=\"white\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.px-2\").innerText=\"" + expectedErrorMessage + "\"");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.px-2\").style.background=\"white\"");
         eyes.checkWindow("loginErrors");
 
         String h1Text = driver.findElement(By.cssSelector("h1")).getText();
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
-        String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
+        String errorMessage = driver.findElement(By.cssSelector("div.px-2")).getText();
         System.out.printf("H1 text: '%s'%n", h1Text);
         System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
         System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
@@ -149,10 +152,8 @@ public class GitHubUltraFastGridTest extends BaseTest {
         String h1Text = driver.findElement(By.cssSelector("h1")).getText();
         String usernameLabel = driver.findElement(By.cssSelector("label[for='login_field']")).getText();
         String passwordLabel = driver.findElement(By.cssSelector("label[for='password']")).getText();
-        String errorMessage = driver.findElement(By.cssSelector("div.container-lg.px-2")).getText();
         System.out.printf("H1 text: '%s'%n", h1Text);
         System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
         System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
-        System.out.printf("errorMessage  : '%s'%n", errorMessage);
     }
 }

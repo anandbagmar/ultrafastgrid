@@ -1,5 +1,6 @@
-package com.anandbagmar.ultrafastgrid;
+package com.anandbagmar.ultrafastgrid.tests;
 
+import com.anandbagmar.ultrafastgrid.BlogBaseTest;
 import org.testng.*;
 
 import java.lang.reflect.*;
