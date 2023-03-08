@@ -98,6 +98,7 @@ public abstract class BaseTest {
                 DriverUtils.getPathForChromeDriverFromMachine();
                 ChromeOptions options = new ChromeOptions();
                 options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+                options.addArguments("--remote-allow-origins=*");
 //                options.addArguments("headless");
                 innerDriver = new ChromeDriver(options);
                 break;

@@ -19,6 +19,7 @@ BROWSER=chrome USE_UFG=false  ./gradlew test
 BROWSER=firefox USE_UFG=false  ./gradlew test
 
 BROWSER=firefox USE_UFG=false  ./gradlew test --tests "*GitHub*"
+BROWSER=chrome USE_UFG=false  ./gradlew test --tests "*GitHub*"
 ```
 
 Defaults:
