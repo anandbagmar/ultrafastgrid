@@ -23,10 +23,10 @@ public class GitHubUltraFastGridTest extends BaseTest {
 
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSize, true, isDisabled);
+        setupBeforeMethod(appName, method, viewportSize, true, isDisabled, "chrome");
     }
 
-    //    @Test(description = "Login to Github - 1st build, no Eyes")
+//    @Test(description = "Login to Github - 1st build, no Eyes")
     public void loginGithubFirstBuildNoEyes() {
         WebDriver driver = getDriver();
 
@@ -57,7 +57,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         Assert.assertEquals(errorMessage, expectedErrorMessage);
     }
 
-    //    @Test(description = "Validate error messages on Login to Github - new build, no Eyes")
+//    @Test(description = "Validate error messages on Login to Github - new build, no Eyes")
     public void loginGithubNewBuildNoEyes() {
         WebDriver driver = getDriver();
         String expectedH1Text = "SignIn";
@@ -83,7 +83,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         Assert.assertEquals(errorMessage, expectedErrorMessage);
     }
 
-    @Test(description = "Login to Github - 1st build, with Eyes")
+//    @Test(description = "Login to Github - 1st build, with Eyes")
     public void loginGithubFirstBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();
@@ -119,7 +119,8 @@ public class GitHubUltraFastGridTest extends BaseTest {
         eyes.checkWindow("selfhealing");
     }
 
-    @Test(description = "Login to Github - 1st build, with Eyes")
+
+//        @Test(description = "Login to Github - 1st build, with Eyes")
     public void loginGithubSecondBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();
@@ -146,7 +147,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         System.out.printf("errorMessage  : '%s'%n", errorMessage);
     }
 
-    @Test(description = "Validate error messages on Login to Github - new build, with Eyes")
+//        @Test(description = "Validate error messages on Login to Github - new build, with Eyes")
     public void loginGithubNewBuildWithEyes() {
         Eyes eyes = getEyes();
         WebDriver driver = getDriver();

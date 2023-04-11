@@ -53,11 +53,11 @@ public abstract class BaseTest {
     }
 
     protected synchronized void setupBeforeMethod(Method method) {
-        WebDriver innerDriver = createDriver(method);
+        WebDriver innerDriver = createDriver(method, "chrome");
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver));
     }
 
-    protected synchronized void setupBeforeMethod(String appName, Method method, RectangleSize viewportSize, boolean takeFullPageScreenshot, boolean isDisabled) {
+    protected synchronized void setupBeforeMethod(String appName, Method method, RectangleSize viewportSize, boolean takeFullPageScreenshot, boolean isDisabled, String browserName) {
         String className = method.getDeclaringClass().getSimpleName();
         String testName = method.getName();
         BatchInfo batchInfo = getBatchInfoForTestClass(className);
@@ -77,7 +77,7 @@ public abstract class BaseTest {
             System.out.println(className + ": BeforeMethod: " + testName + ": BatchInfo already created. Reuse it. Batch name: '" + batchInfo.getName() + "', BatchID: '" + batchInfo.getId() + "'");
         }
 
-        WebDriver innerDriver = createDriver(method);
+        WebDriver innerDriver = createDriver(method, browserName);
 
         Eyes eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot, isDisabled);
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner, batchInfo));
@@ -92,12 +92,12 @@ public abstract class BaseTest {
         return new Date().getTime() - random.nextInt();
     }
 
-    private synchronized WebDriver createDriver(Method method) {
+    private synchronized WebDriver createDriver(Method method, String browser) {
         System.out.println("BaseTest: createDriver for test: '" + method.getName() + "' with ThreadID: " + Thread.currentThread().getId());
         bt_beforeMethod = LocalDateTime.now();
         WebDriver innerDriver = null;
-        String browser = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
-        browser = "SELF_HEALING";
+//        String browser = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
+//        browser = "SELF_HEALING";
         System.out.println("Running test with browser - " + browser);
         switch (browser.toLowerCase()) {
             case "chrome":
@@ -139,8 +139,8 @@ public abstract class BaseTest {
         Eyes eyes = testExecutionContext.getEyes();
         System.out.println("AfterMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: '" + eyes.getConfiguration().getBatch().getName() + "', BatchID: '" + eyes.getConfiguration().getBatch().getId() + "'");
 
-        quitDriver();
         eyes.closeAsync();
+        quitDriver();
 
         bt_afterMethod = LocalDateTime.now();
         long seconds = Duration.between(bt_beforeMethod, bt_afterMethod).toMillis() / 1000;

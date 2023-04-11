@@ -14,7 +14,7 @@ public class BlogEyesTest extends BlogBaseTest {
 
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSize, false, isDisabled);
+        setupBeforeMethod(appName, method, viewportSize, false, isDisabled, "chrome");
     }
 
     //    @Test(description = "Blogs in 2019")
