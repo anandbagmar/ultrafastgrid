@@ -9,10 +9,10 @@ version '1.0-SNAPSHOT'
 buildscript {
     ext {
         gradleVersionProperty = '7.3.3'
-        testNGVersion = '7+'
-        webdriverManagerVersion = '4.+'
-        jsonSimpleVersion = '1.+'
-        applitoolsVersion = '3+'
+        testNGVersion = '7.7.1'
+        webdriverManagerVersion = '5.3.2'
+        jsonSimpleVersion = '1.1.1'
+        applitoolsVersion = '5.47.0'
     }
 }
 
@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
     implementation 'org.testng:testng:' + testNGVersion
-    implementation 'com.applitools:eyes-selenium-java3:' + applitoolsVersion
+    implementation 'com.applitools:eyes-selenium-java5:' + applitoolsVersion
     implementation 'io.github.bonigarcia:webdrivermanager:' + webdriverManagerVersion
     implementation 'com.googlecode.json-simple:json-simple:' + jsonSimpleVersion
 }

@@ -11,12 +11,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -42,6 +46,7 @@ public abstract class BaseTest {
         System.out.println("APPLITOOLS_DONT_CLOSE_BATCHES: env : " + applitoolsDontCloseBatches);
 
         boolean useUFG = Boolean.parseBoolean(System.getenv("USE_UFG"));
+        useUFG = true;
         System.out.println("useUFG: " + useUFG);
         runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
         System.out.println("--------------------------------------------------------------------");
@@ -92,6 +97,7 @@ public abstract class BaseTest {
         bt_beforeMethod = LocalDateTime.now();
         WebDriver innerDriver = null;
         String browser = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
+        browser = "SELF_HEALING";
         System.out.println("Running test with browser - " + browser);
         switch (browser.toLowerCase()) {
             case "chrome":
@@ -106,8 +112,23 @@ public abstract class BaseTest {
                 DriverUtils.getPathForFirefoxDriverFromMachine();
                 innerDriver = new FirefoxDriver();
                 break;
+            case "self_healing":
+                innerDriver = createExecutionCloudRemoteDriver();
+                break;
             default:
                 innerDriver = new ChromeDriver();
+        }
+        return innerDriver;
+    }
+
+    private static WebDriver createExecutionCloudRemoteDriver() {
+        WebDriver innerDriver;
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setBrowserName("chrome");
+        try {
+            innerDriver = new RemoteWebDriver(new URL(Eyes.getExecutionCloudURL()), caps);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
         }
         return innerDriver;
     }
@@ -269,7 +290,7 @@ public abstract class BaseTest {
         String applitoolsApiKey = System.getenv("APPLITOOLS_API_KEY");
         System.out.println("API key: " + applitoolsApiKey);
         config.setApiKey(applitoolsApiKey);
-//        eyes.setLogHandler(new StdoutLogHandler(true));
+        eyes.setLogHandler(new StdoutLogHandler(true));
         config.setSendDom(true);
         config = getUFGBrowserConfiguration(config);
         eyes.setConfiguration(config);

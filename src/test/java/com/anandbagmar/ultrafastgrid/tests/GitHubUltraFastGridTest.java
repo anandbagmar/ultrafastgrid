@@ -1,13 +1,16 @@
 package com.anandbagmar.ultrafastgrid.tests;
 
 import com.anandbagmar.ultrafastgrid.BaseTest;
-import com.applitools.eyes.*;
-import com.applitools.eyes.selenium.*;
-import org.openqa.selenium.*;
-import org.testng.*;
-import org.testng.annotations.*;
+import com.applitools.eyes.RectangleSize;
+import com.applitools.eyes.selenium.Eyes;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
 public class GitHubUltraFastGridTest extends BaseTest {
     private final String appName = "github-eyes-ufg-test";
@@ -91,8 +94,12 @@ public class GitHubUltraFastGridTest extends BaseTest {
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.footer\").style=\"display: none;\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"label[for='login_field']\").innerText=\"" + expectedUserName + "\"");
+//        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"input.btn\").classList.remove(\"btn\")");
+        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"input.btn\").setAttribute(\"value\",\"Sign\")");
         eyes.checkWindow("loginPage");
-        driver.findElement(By.cssSelector("input.btn")).click();
+//        driver.findElement(By.xpath("//input[@name=\"commit\"]")).click();
+//        driver.findElement(By.cssSelector("input.btn")).click();
+        driver.findElement(By.xpath("//input[@value=\"Sign in\"]")).click();
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"h1\").innerText=\"" + expectedH1Text + "\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div.footer\").style=\"display: none;\"");
         ((JavascriptExecutor) driver).executeScript("document.querySelector(\"label[for='login_field']\").innerText=\"" + expectedUserName + "\"");
@@ -109,6 +116,7 @@ public class GitHubUltraFastGridTest extends BaseTest {
         System.out.printf("usernameLabel  : '%s'%n", usernameLabel);
         System.out.printf("passwordLabel  : '%s'%n", passwordLabel);
         System.out.printf("errorMessage  : '%s'%n", errorMessage);
+        eyes.checkWindow("selfhealing");
     }
 
     @Test(description = "Login to Github - 1st build, with Eyes")
