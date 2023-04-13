@@ -77,6 +77,8 @@ public abstract class BaseTest {
     protected synchronized void setupBeforeMethod(String appName, Method method, boolean takeFullPageScreenshot) {
         String className = method.getDeclaringClass().getSimpleName();
         String testName = method.getName();
+        appName = getUpdatedAppName(appName);
+
         BatchInfo batchInfo = getBatchInfoForTestClass(className);
         if (null == batchInfo) {
             System.out.println(className + ": BeforeMethod: " + testName + ": BatchInfo not yet created. Creating it now");
@@ -98,8 +100,6 @@ public abstract class BaseTest {
 
         Eyes eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot);
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner, batchInfo));
-        appName = getUpdatedAppName(appName);
-
         eyes.open(innerDriver, appName, method.getName(), getViewportSize());
         System.out.println("BeforeMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: '" + eyes.getConfiguration().getBatch().getName() + "', BatchID: '" + eyes.getConfiguration().getBatch().getId() + "'");
     }
