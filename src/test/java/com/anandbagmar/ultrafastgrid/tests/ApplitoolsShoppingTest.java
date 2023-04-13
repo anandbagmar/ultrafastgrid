@@ -1,7 +1,6 @@
 package com.anandbagmar.ultrafastgrid.tests;
 
 import com.anandbagmar.ultrafastgrid.BaseTest;
-import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.selenium.Eyes;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -13,15 +12,11 @@ import java.lang.reflect.Method;
 
 public class ApplitoolsShoppingTest extends BaseTest {
 
-    private final String appName = "applitools-shopping-eyes-ufg-test";
-    private RectangleSize viewportSize = new RectangleSize(1024, 768);
-    private boolean isDisabled = false;
-    private String browser = "self_healing";
-//    private String browser = "chrome";
+    private final String appName = "applitools-shopping";
 
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
-        setupBeforeMethod(appName, method, viewportSize, true, isDisabled, browser);
+        setupBeforeMethod(appName, method, true);
     }
 
     @Test(description = "Add to cart")
@@ -34,10 +29,29 @@ public class ApplitoolsShoppingTest extends BaseTest {
         eyes.checkWindow("onLoad");
         driver.findElement(By.id("product_1")).click();
         eyes.checkWindow("product_1");
-//        System.out.println("before change: " + driver.findElement(By.id("DIV__colxlcollg__112")).getAttribute("innerHTML"));
-        ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div#DIV__btnaddtoca__113\").setAttribute(\"id\", \"foo\")");
-//        System.out.println("after change: " + driver.findElement(By.id("DIV__colxlcollg__112")).getAttribute("innerHTML"));
+        if (isInject()) {
+            ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div#DIV__btnaddtoca__113\").setAttribute(\"id\", \"foo\")");
+        }
         driver.findElement(By.id("DIV__btnaddtoca__113")).click();
         eyes.checkWindow("add to cart");
+        waitFor(5);
     }
+
+//    @Test(description = "Increase quantity and add to cart")
+//    public void increaseQuantityAndAddToCart() {
+//        Eyes eyes = getEyes();
+//        WebDriver driver = getDriver();
+//
+//        String url = "https://demo.applitools.com/tlchackathonmasterv1";
+//        driver.get(url);
+//        eyes.checkWindow("onLoad");
+//        driver.findElement(By.id("product_1")).click();
+//        eyes.checkWindow("product_1");
+//        WebElement quantityElement = driver.findElement(By.id("quantity_1"));
+//        quantityElement.clear();
+//        quantityElement.sendKeys("2");
+//        eyes.checkWindow("increase quantity");
+//        driver.findElement(By.id("DIV__btnaddtoca__113")).click();
+//        eyes.checkWindow("add to cart");
+//    }
 }

@@ -1,12 +1,12 @@
 package com.anandbagmar.ultrafastgrid;
 
-import com.anandbagmar.ultrafastgrid.utilities.DriverUtils;
 import com.anandbagmar.ultrafastgrid.utilities.TestExecutionContext;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
 import com.applitools.eyes.visualgrid.model.DeviceName;
 import com.applitools.eyes.visualgrid.model.ScreenOrientation;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -36,6 +36,24 @@ public abstract class BaseTest {
     private LocalDateTime bt_afterMethod;
     private EyesRunner runner;
 
+    protected static RectangleSize getViewportSize() {
+        return new RectangleSize(1024, 960);
+    }
+
+    protected static String getBrowserName() {
+        return (null== System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
+    }
+
+    protected static boolean isDisabled() {
+        return (null == System.getenv("DISABLED"))? false : Boolean.parseBoolean(System.getenv("DISABLED"));
+    }
+    protected static boolean isInject() {
+        return null == System.getenv("INJECT")? false : Boolean.parseBoolean(System.getenv("INJECT"));
+    }
+
+    private static boolean isUfg() {
+        return (null == System.getenv("USE_UFG")? false : Boolean.parseBoolean(System.getenv("USE_UFG")));
+    }
     @BeforeSuite
     protected void beforeSuite() {
         System.out.println("--------------------------------------------------------------------");
@@ -45,8 +63,7 @@ public abstract class BaseTest {
         }
         System.out.println("APPLITOOLS_DONT_CLOSE_BATCHES: env : " + applitoolsDontCloseBatches);
 
-        boolean useUFG = Boolean.parseBoolean(System.getenv("USE_UFG"));
-        useUFG = true;
+        boolean useUFG = isUfg();
         System.out.println("useUFG: " + useUFG);
         runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
         System.out.println("--------------------------------------------------------------------");
@@ -57,7 +74,7 @@ public abstract class BaseTest {
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver));
     }
 
-    protected synchronized void setupBeforeMethod(String appName, Method method, RectangleSize viewportSize, boolean takeFullPageScreenshot, boolean isDisabled, String browserName) {
+    protected synchronized void setupBeforeMethod(String appName, Method method, boolean takeFullPageScreenshot) {
         String className = method.getDeclaringClass().getSimpleName();
         String testName = method.getName();
         BatchInfo batchInfo = getBatchInfoForTestClass(className);
@@ -77,14 +94,21 @@ public abstract class BaseTest {
             System.out.println(className + ": BeforeMethod: " + testName + ": BatchInfo already created. Reuse it. Batch name: '" + batchInfo.getName() + "', BatchID: '" + batchInfo.getId() + "'");
         }
 
-        WebDriver innerDriver = createDriver(method, browserName);
+        WebDriver innerDriver = createDriver(method, getBrowserName());
 
-        Eyes eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot, isDisabled);
+        Eyes eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot);
         addContext(Thread.currentThread().getId(), new TestExecutionContext(method.getName(), innerDriver, eyes, runner, batchInfo));
+        appName = getUpdatedAppName(appName);
 
-        eyes.open(innerDriver, appName, method.getName(), viewportSize);
+        eyes.open(innerDriver, appName, method.getName(), getViewportSize());
         System.out.println("BeforeMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: '" + eyes.getConfiguration().getBatch().getName() + "', BatchID: '" + eyes.getConfiguration().getBatch().getId() + "'");
-//        System.out.println("BeforeMethod: Eyes Hashcode: " + eyes.hashCode() + ", EyesRunner Hashcode: " + runner.hashCode() + ", Batch Hashcode: " + batchInfo.hashCode());
+    }
+
+    private String getUpdatedAppName(String appName) {
+        if (isUfg()) {
+            appName = appName + "-UFG";
+        }
+        return appName;
     }
 
     private long randomWithRange() {
@@ -96,12 +120,10 @@ public abstract class BaseTest {
         System.out.println("BaseTest: createDriver for test: '" + method.getName() + "' with ThreadID: " + Thread.currentThread().getId());
         bt_beforeMethod = LocalDateTime.now();
         WebDriver innerDriver = null;
-//        String browser = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
-//        browser = "SELF_HEALING";
         System.out.println("Running test with browser - " + browser);
         switch (browser.toLowerCase()) {
             case "chrome":
-                DriverUtils.getPathForChromeDriverFromMachine();
+                WebDriverManager.chromedriver().setup();
                 ChromeOptions options = new ChromeOptions();
                 options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
                 options.addArguments("--remote-allow-origins=*");
@@ -109,7 +131,7 @@ public abstract class BaseTest {
                 innerDriver = new ChromeDriver(options);
                 break;
             case "firefox":
-                DriverUtils.getPathForFirefoxDriverFromMachine();
+                WebDriverManager.firefoxdriver().setup();
                 innerDriver = new FirefoxDriver();
                 break;
             case "self_healing":
@@ -273,13 +295,13 @@ public abstract class BaseTest {
         return testExecutionContext.getEyes();
     }
 
-    private synchronized Eyes configureEyes(EyesRunner runner, BatchInfo batch, boolean takeFullPageScreenshot, boolean isDisabled) {
+    private synchronized Eyes configureEyes(EyesRunner runner, BatchInfo batch, boolean takeFullPageScreenshot) {
         Eyes eyes = new Eyes(runner);
-        System.out.println("Is Applitools Visual AI enabled? - " + !isDisabled);
+        System.out.println("Is Applitools Visual AI enabled? - " + !isDisabled());
         Configuration config = eyes.getConfiguration();
         config.setBatch(batch);
-        eyes.setIsDisabled(isDisabled);
         config.setMatchLevel(MatchLevel.STRICT);
+        config.setIsDisabled(isDisabled());
         config.setStitchMode(StitchMode.CSS);
         config.setForceFullPageScreenshot(takeFullPageScreenshot);
         config.getBatch().setNotifyOnCompletion(false);

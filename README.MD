@@ -20,10 +20,15 @@ BROWSER=firefox USE_UFG=false  ./gradlew test
 
 BROWSER=firefox USE_UFG=false  ./gradlew test --tests "*GitHub*"
 BROWSER=chrome USE_UFG=false  ./gradlew test --tests "*GitHub*"
+BROWSER=chrome USE_UFG=false DISABLED=true ./gradlew test --tests "*Applitools*"
+BROWSER=chrome USE_UFG=false DISABLED=true INJECT=true ./gradlew test --tests "*Applitools*"
+BROWSER=self_healing USE_UFG=true INJECT=true ./gradlew test --tests "*Applitools*"
 ```
 
 Defaults:
 ```
 BROWSER=chrome
 USE_UFG=false
+DISABLED=false
+INJECT=false
 ```
