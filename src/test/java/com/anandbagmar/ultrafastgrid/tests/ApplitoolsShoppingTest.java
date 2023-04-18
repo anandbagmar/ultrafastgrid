@@ -28,6 +28,7 @@ public class ApplitoolsShoppingTest extends BaseTest {
         driver.get(url);
         eyes.checkWindow("onLoad");
         driver.findElement(By.id("product_1")).click();
+
         eyes.checkWindow("product_1");
         if (isInject()) {
             ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div#DIV__btnaddtoca__113\").setAttribute(\"id\", \"foo\")");
@@ -36,22 +37,4 @@ public class ApplitoolsShoppingTest extends BaseTest {
         eyes.checkWindow("add to cart");
         waitFor(5);
     }
-
-//    @Test(description = "Increase quantity and add to cart")
-//    public void increaseQuantityAndAddToCart() {
-//        Eyes eyes = getEyes();
-//        WebDriver driver = getDriver();
-//
-//        String url = "https://demo.applitools.com/tlchackathonmasterv1";
-//        driver.get(url);
-//        eyes.checkWindow("onLoad");
-//        driver.findElement(By.id("product_1")).click();
-//        eyes.checkWindow("product_1");
-//        WebElement quantityElement = driver.findElement(By.id("quantity_1"));
-//        quantityElement.clear();
-//        quantityElement.sendKeys("2");
-//        eyes.checkWindow("increase quantity");
-//        driver.findElement(By.id("DIV__btnaddtoca__113")).click();
-//        eyes.checkWindow("add to cart");
-//    }
 }

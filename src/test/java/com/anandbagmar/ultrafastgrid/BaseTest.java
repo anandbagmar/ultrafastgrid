@@ -47,6 +47,7 @@ public abstract class BaseTest {
     protected static boolean isDisabled() {
         return (null == System.getenv("DISABLED"))? false : Boolean.parseBoolean(System.getenv("DISABLED"));
     }
+
     protected static boolean isInject() {
         return null == System.getenv("INJECT")? false : Boolean.parseBoolean(System.getenv("INJECT"));
     }
@@ -54,6 +55,7 @@ public abstract class BaseTest {
     private static boolean isUfg() {
         return (null == System.getenv("USE_UFG")? false : Boolean.parseBoolean(System.getenv("USE_UFG")));
     }
+
     @BeforeSuite
     protected void beforeSuite() {
         System.out.println("--------------------------------------------------------------------");
