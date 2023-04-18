@@ -1,17 +1,18 @@
 package com.anandbagmar.ultrafastgrid.tests;
 
 import com.anandbagmar.ultrafastgrid.BaseTest;
+import com.applitools.eyes.selenium.Eyes;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-public class ApplitoolsShoppingTest extends BaseTest {
-
-    private final String appName = "applitools-shopping";
+public class GitHubTest extends BaseTest {
+    private final String appName = "githubLogin";
 
     @BeforeSuite
     public void beforeSuite() {
@@ -23,19 +24,16 @@ public class ApplitoolsShoppingTest extends BaseTest {
         setupBeforeMethod(method, true);
     }
 
-    @Test(description = "Add to cart")
-    public void addToCart() {
-        String url = "https://demo.applitools.com/tlchackathonmasterv1";
+    @Test(description = "Login to Github")
+    public void loginNoCreds() {
+        String url = "https://github.com/login";
         driver.get(url);
         eyes.checkWindow("onLoad");
-        driver.findElement(By.id("product_1")).click();
-
-        eyes.checkWindow("product_1");
         if (isInject()) {
-            ((JavascriptExecutor) driver).executeScript("document.querySelector(\"div#DIV__btnaddtoca__113\").setAttribute(\"id\", \"foo\")");
+            ((JavascriptExecutor) driver).executeScript("document.querySelector(\"input.btn\").setAttribute(\"value\",\"Sign\")");
         }
-        driver.findElement(By.id("DIV__btnaddtoca__113")).click();
-        eyes.checkWindow("add to cart");
-        waitFor(5);
+        eyes.checkWindow("loginPage");
+        driver.findElement(By.xpath("//input[@value=\"Sign in\"]")).click();
+        eyes.checkWindow("loginErrors");
     }
 }
