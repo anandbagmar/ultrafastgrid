@@ -25,7 +25,7 @@ public class ApplitoolsShoppingTest extends BaseTest {
 
     @Test(description = "Add to cart")
     public void addToCart() {
-        String url = "https://demo.applitools.com/tlchackathonmasterv1";
+        String url = "https://demo.applitools.com/tlcHackathonMasterV1.html";
         driver.get(url);
         eyes.checkWindow("onLoad");
         driver.findElement(By.id("product_1")).click();
