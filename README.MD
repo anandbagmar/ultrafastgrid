@@ -22,6 +22,9 @@ BROWSER=firefox USE_UFG=false  ./gradlew test --tests "*GitHub*"
 BROWSER=chrome USE_UFG=false  ./gradlew test --tests "*GitHub*"
 BROWSER=chrome USE_UFG=false DISABLED=true ./gradlew test --tests "*Applitools*"
 BROWSER=chrome USE_UFG=false DISABLED=true INJECT=true ./gradlew test --tests "*Applitools*"
+USE_UFG=false INJECT=false ./gradlew test --tests "*Applitools*"
+USE_UFG=false INJECT=false DISABLED=true ./gradlew test --tests "*Applitools*"
+BROWSER=self_healing USE_UFG=true INJECT=false ./gradlew test --tests "*Applitools*"
 BROWSER=self_healing USE_UFG=true INJECT=true ./gradlew test --tests "*Applitools*"
 ```
 

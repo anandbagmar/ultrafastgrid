@@ -69,15 +69,14 @@ public abstract class BaseTest {
 
         appName = getUpdatedAppName(appNameFromTest);
 
-        System.out.println("--------------------------------------------------------------------");
         System.out.println("appNameFromTest: " + appNameFromTest);
-        System.out.println(null==batchInfo?"batchInfo is null":"batchInfo is not null");
         if (null == batchInfo) {
             batchInfo = new BatchInfo(appName);
             batchInfo.setNotifyOnCompletion(false);
             String batchID = String.valueOf(randomWithRange());
             batchInfo.setId(batchID);
         }
+        System.out.println(null==batchInfo?"batchInfo is null":"batchInfo: " + batchInfo.getId());
     }
 
     protected synchronized void setupBeforeMethod(Method method, boolean takeFullPageScreenshot) {
@@ -107,23 +106,33 @@ public abstract class BaseTest {
         System.out.println("Running test with browser - " + browser);
         switch (browser.toLowerCase()) {
             case "chrome":
-                WebDriverManager.chromedriver().setup();
-                ChromeOptions options = new ChromeOptions();
-                options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-                options.addArguments("--remote-allow-origins=*");
-//                options.addArguments("headless");
-                innerDriver = new ChromeDriver(options);
+                System.out.println("Creating local ChromeDriver");
+                innerDriver = createChromeDriver();
                 break;
             case "firefox":
+                System.out.println("Creating local FirefoxDriver");
                 WebDriverManager.firefoxdriver().setup();
                 innerDriver = new FirefoxDriver();
                 break;
             case "self_healing":
+                System.out.println("Creating Driver using ExecutionCloud");
                 innerDriver = createExecutionCloudRemoteDriver();
                 break;
             default:
-                innerDriver = new ChromeDriver();
+                System.out.println("Default: Creating local ChromeDriver");
+                innerDriver = createChromeDriver();
         }
+        return innerDriver;
+    }
+
+    private static WebDriver createChromeDriver() {
+        WebDriver innerDriver;
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+        options.addArguments("--remote-allow-origins=*");
+//                options.addArguments("headless");
+        innerDriver = new ChromeDriver(options);
         return innerDriver;
     }
 
