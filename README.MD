@@ -15,8 +15,8 @@ or, you can run the testng tests from your IDE
 
 Example commands:
 ```
-BROWSER=chrome USE_UFG=false  ./gradlew test
-BROWSER=firefox USE_UFG=false  ./gradlew test
+BROWSER=chrome USE_UFG=false  ./gradlew test --tests "*Applitools*"
+BROWSER=firefox USE_UFG=false  ./gradlew test --tests "*Applitools*"
 
 BROWSER=firefox USE_UFG=false  ./gradlew test --tests "*GitHub*"
 BROWSER=chrome USE_UFG=false  ./gradlew test --tests "*GitHub*"

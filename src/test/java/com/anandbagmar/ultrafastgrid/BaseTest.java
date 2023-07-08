@@ -65,6 +65,7 @@ public abstract class BaseTest {
         boolean useUFG = isUfg();
         System.out.println("useUFG: " + useUFG);
         runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
+        runner.setDontCloseBatches(true);
         System.out.println("--------------------------------------------------------------------");
 
         appName = getUpdatedAppName(appNameFromTest);
