@@ -84,8 +84,6 @@ clean.doLast {
     println "Created reports directory"
 }
 
-test.dependsOn clean
-
 wrapper {
     gradleVersion = project.gradleVersionProperty
 }
