@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
@@ -28,7 +30,19 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:' + jsonSimpleVersion
 }
 
-project.ext.logDir = "${rootDir}/reports"
+static def getCurrentDatestamp() {
+    Date today = new Date()
+    SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy")
+    return df.format(today)
+}
+
+static def getCurrentTimestamp() {
+    Date today = new Date()
+    SimpleDateFormat df = new SimpleDateFormat("HH-mm-ss")
+    return df.format(today)
+}
+
+project.ext.logDir = "${rootDir}/reports/" + getCurrentDatestamp() + "/" + getCurrentTimestamp()
 
 test {
     doFirst {
@@ -62,7 +76,6 @@ clean.doFirst {
     delete "${rootDir}/bin"
     delete "${rootDir}/build"
     delete "${rootDir}/out"
-    delete "${rootDir}/reports"
     println "Clean: Deleted bin, build, out, target and reports directories"
 }
 
