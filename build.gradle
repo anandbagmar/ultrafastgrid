@@ -12,7 +12,6 @@ buildscript {
     ext {
         gradleVersionProperty = '8.2.1'
         testNGVersion = '7.8.0'
-        webdriverManagerVersion = '5.4.0'
         jsonSimpleVersion = '1.1.1'
         applitoolsVersion = '5.63.0'
     }
@@ -26,7 +25,6 @@ repositories {
 dependencies {
     implementation 'org.testng:testng:' + testNGVersion
     implementation 'com.applitools:eyes-selenium-java5:' + applitoolsVersion
-    implementation 'io.github.bonigarcia:webdrivermanager:' + webdriverManagerVersion
     implementation 'com.googlecode.json-simple:json-simple:' + jsonSimpleVersion
 }
 
@@ -68,6 +66,14 @@ test {
             showCauses = true
             showExceptions = true
         }
+        println("Debug mode: " + System.getProperty('debug', 'false'))
+        // attach debugger
+        if (System.getProperty('debug', 'false') == 'true') {
+            println("In debug mode")
+            jvmArgs '-Xdebug', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,' +
+                    'address=*:5005'
+        }
+
     }
 }
 

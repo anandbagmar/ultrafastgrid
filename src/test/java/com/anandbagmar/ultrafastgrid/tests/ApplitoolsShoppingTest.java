@@ -36,6 +36,10 @@ public class ApplitoolsShoppingTest extends BaseTest {
         }
         driver.findElement(By.id("DIV__btnaddtoca__113")).click();
         eyes.checkWindow("add to cart");
-        waitFor(5);
     }
+
+    /* implement a new test to remove items from cart */
+
+    // implement a new test to clear items from the cart
+
 }

@@ -5,13 +5,13 @@ import com.applitools.eyes.selenium.*;
 import com.applitools.eyes.visualgrid.model.DeviceName;
 import com.applitools.eyes.visualgrid.model.ScreenOrientation;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -43,25 +43,19 @@ public abstract class BaseTest {
     }
 
     protected static boolean isDisabled() {
-        return (null == System.getenv("DISABLED")) ? false : Boolean.parseBoolean(System.getenv("DISABLED"));
+        return null != System.getenv("DISABLED") && Boolean.parseBoolean(System.getenv("DISABLED"));
     }
 
     protected static boolean isInject() {
-        return null == System.getenv("INJECT") ? false : Boolean.parseBoolean(System.getenv("INJECT"));
+        return null != System.getenv("INJECT") && Boolean.parseBoolean(System.getenv("INJECT"));
     }
 
     private static boolean isUfg() {
-        return (null == System.getenv("USE_UFG") ? false : Boolean.parseBoolean(System.getenv("USE_UFG")));
+        return (null != System.getenv("USE_UFG") && Boolean.parseBoolean(System.getenv("USE_UFG")));
     }
 
     protected void setupBeforeSuite(String appNameFromTest) {
         System.out.println("--------------------------------------------------------------------");
-        String applitoolsDontCloseBatches = System.getenv("APPLITOOLS_DONT_CLOSE_BATCHES");
-        if (null == applitoolsDontCloseBatches) {
-            throw new IllegalArgumentException("Env variable 'APPLITOOLS_DONT_CLOSE_BATCHES' should be set to true before running these tests for batches to work correctly");
-        }
-        System.out.println("APPLITOOLS_DONT_CLOSE_BATCHES: env : " + applitoolsDontCloseBatches);
-
         boolean useUFG = isUfg();
         System.out.println("useUFG: " + useUFG);
         runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
@@ -71,13 +65,17 @@ public abstract class BaseTest {
         appName = getUpdatedAppName(appNameFromTest);
 
         System.out.println("appNameFromTest: " + appNameFromTest);
+        setupBatchInfo();
+    }
+
+    private void setupBatchInfo() {
         if (null == batchInfo) {
             batchInfo = new BatchInfo(appName);
             batchInfo.setNotifyOnCompletion(false);
             String batchID = String.valueOf(randomWithRange());
             batchInfo.setId(batchID);
         }
-        System.out.println(null==batchInfo?"batchInfo is null":"batchInfo: " + batchInfo.getId());
+        System.out.println(null == batchInfo ? "batchInfo is null" : "batchInfo: " + batchInfo.getId());
     }
 
     protected synchronized void setupBeforeMethod(Method method, boolean takeFullPageScreenshot) {
@@ -112,7 +110,6 @@ public abstract class BaseTest {
                 break;
             case "firefox":
                 System.out.println("Creating local FirefoxDriver");
-                WebDriverManager.firefoxdriver().setup();
                 innerDriver = new FirefoxDriver();
                 break;
             case "self_healing":
@@ -128,7 +125,6 @@ public abstract class BaseTest {
 
     private static WebDriver createChromeDriver() {
         WebDriver innerDriver;
-        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.addArguments("--remote-allow-origins=*");
@@ -151,28 +147,34 @@ public abstract class BaseTest {
 
     @AfterMethod(alwaysRun = true)
     public void afterMethod(ITestResult result) {
-        System.out.println("AfterMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: '" + eyes.getConfiguration().getBatch().getName() + "'");
+        System.out.printf("AfterMethod: Test name: %s, App Name: %s%n", result.getName(), appName);
 
         eyes.closeAsync();
         quitDriver();
 
+        boolean mismatchFound = false;
+        if (!isDisabled()) {
+            System.out.printf("Batch name: '%s'%n", eyes.getConfiguration().getBatch().getName());
+            // fail the test if there is any visual difference found
+            TestResultsSummary allTestResults = runner.getAllTestResults(false);
+            TestResultContainer[] results = allTestResults.getAllResults();
+            for (TestResultContainer eachResult : results) {
+                Throwable ex = results[0].getException();
+                TestResults testResult = eachResult.getTestResults();
+                mismatchFound = handleTestResults(ex, testResult) || mismatchFound;
+            }
+        }
+
         bt_afterMethod = LocalDateTime.now();
         long seconds = Duration.between(bt_beforeMethod, bt_afterMethod).toMillis() / 1000;
-        System.out.println(">>> " + BaseTest.class.getSimpleName() + " - Tests: '" + result.getTestName() + "' took '" + seconds + "' seconds to run");
+        System.out.println(">>> " + BaseTest.class.getSimpleName() + " - Tests: '" + result.getName() + "' took '" + seconds + "' seconds to run");
+        Assert.assertFalse(mismatchFound, "Visual differences found");
     }
 
     @AfterSuite(alwaysRun = true)
     public void afterSuite() {
-        TestResultsSummary allTestResults = runner.getAllTestResults(false);
-        TestResultContainer[] results = allTestResults.getAllResults();
-        System.out.println("Number of tests: " + results.length);
-        boolean mismatchFound = false;
-        for (TestResultContainer eachResult : results) {
-            Throwable ex = results[0].getException();
-            TestResults testResult = eachResult.getTestResults();
-            mismatchFound = handleTestResults(ex, testResult) || mismatchFound;
-        }
-        System.out.println("Overall Visual Validaiton failed? - " + mismatchFound);
+        System.out.println("Closing the runner");
+        runner.close();
     }
 
     protected void waitFor(int numSeconds) {
@@ -197,22 +199,21 @@ public abstract class BaseTest {
     }
 
     protected boolean handleTestResults(Throwable ex, TestResults result) {
-        if (!result.getStatus().equals(TestResultsStatus.Disabled)) {
-            System.out.println("\tTest Name: " + result.getName() + " :: " + result);
-            System.out.println("\tTest status: " + result.getStatus());
-            System.out.printf("\t\tName = '%s', \nBrowser = %s,OS = %s, viewport = %dx%d, matched = %d, mismatched = %d, missing = %d, aborted = %s\n",
-                    result.getName(),
-                    result.getHostApp(),
-                    result.getHostOS(),
-                    result.getHostDisplaySize().getWidth(),
-                    result.getHostDisplaySize().getHeight(),
-                    result.getMatches(),
-                    result.getMismatches(),
-                    result.getMissing(),
-                    (result.isAborted() ? "aborted" : "no"));
-            System.out.println("Results available here: " + result.getUrl());
-        }
-        boolean hasMismatches = result.getMismatches() != 0 || result.isAborted();
+        boolean hasMismatches = false;
+        System.out.println("\tTest Name: " + result.getName() + " :: " + result);
+        System.out.println("\tTest status: " + result.getStatus());
+        System.out.printf("\t\tName = '%s', \nBrowser = %s,OS = %s, viewport = %dx%d, matched = %d, mismatched = %d, missing = %d, aborted = %s\n",
+                result.getName(),
+                result.getHostApp(),
+                result.getHostOS(),
+                result.getHostDisplaySize().getWidth(),
+                result.getHostDisplaySize().getHeight(),
+                result.getMatches(),
+                result.getMismatches(),
+                result.getMissing(),
+                (result.isAborted() ? "aborted" : "no"));
+        System.out.println("Results available here: " + result.getUrl());
+        hasMismatches = result.getMismatches() != 0 || result.isAborted();
         System.out.println("Visual validation failed? - " + hasMismatches);
         return hasMismatches;
     }
@@ -232,7 +233,6 @@ public abstract class BaseTest {
         System.out.println("Branch name: " + branchName);
         config.setBranchName(branchName);
         String applitoolsApiKey = System.getenv("APPLITOOLS_API_KEY");
-        System.out.println("API key: " + applitoolsApiKey);
         config.setApiKey(applitoolsApiKey);
         eyes.setLogHandler(new StdoutLogHandler(true));
         config.setSendDom(true);
@@ -242,28 +242,12 @@ public abstract class BaseTest {
     }
 
     private synchronized Configuration getUFGBrowserConfiguration(Configuration config) {
-
-//        config.addBrowser(1024, 1024, BrowserType.IE_11);
-//        config.addBrowser(1024, 1024, BrowserType.IE_10);
         config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
-//        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM_ONE_VERSION_BACK);
-//        config.addBrowser(1024, 1024, BrowserType.EDGE_LEGACY);
         config.addBrowser(1200, 1024, BrowserType.SAFARI);
-//        config.addBrowser(1024, 1024, BrowserType.SAFARI_ONE_VERSION_BACK);
-//        config.addBrowser(1024, 1024, BrowserType.SAFARI_TWO_VERSIONS_BACK);
         config.addBrowser(1024, 1200, BrowserType.CHROME);
-//        config.addBrowser(1024, 1024, BrowserType.CHROME_ONE_VERSION_BACK);
-//        config.addBrowser(1024, 1024, BrowserType.CHROME_TWO_VERSIONS_BACK);
         config.addBrowser(1200, 1200, BrowserType.FIREFOX);
-//        config.addBrowser(1024, 1024, BrowserType.FIREFOX_ONE_VERSION_BACK);
-//        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.PORTRAIT);
         config.addDeviceEmulation(DeviceName.Galaxy_S20, ScreenOrientation.PORTRAIT);
         config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.PORTRAIT);
-//        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.PORTRAIT);
         config.addDeviceEmulation(DeviceName.iPhone_11_Pro_Max, ScreenOrientation.PORTRAIT);
 
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.LANDSCAPE);
