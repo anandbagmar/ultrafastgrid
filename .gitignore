@@ -5,3 +5,4 @@ out/
 *.jar
 reports/
 *.txt
+lib/
