@@ -200,6 +200,7 @@ public abstract class BaseTest {
 
     protected boolean handleTestResults(Throwable ex, TestResults result) {
         boolean hasMismatches = false;
+        System.out.println(result);
         System.out.println("\tTest Name: " + result.getName() + " :: " + result);
         System.out.println("\tTest status: " + result.getStatus());
         System.out.printf("\t\tName = '%s', \nBrowser = %s,OS = %s, viewport = %dx%d, matched = %d, mismatched = %d, missing = %d, aborted = %s\n",
@@ -246,9 +247,9 @@ public abstract class BaseTest {
         config.addBrowser(1200, 1024, BrowserType.SAFARI);
         config.addBrowser(1024, 1200, BrowserType.CHROME);
         config.addBrowser(1200, 1200, BrowserType.FIREFOX);
-        config.addDeviceEmulation(DeviceName.Galaxy_S20, ScreenOrientation.PORTRAIT);
-        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.PORTRAIT);
-        config.addDeviceEmulation(DeviceName.iPhone_11_Pro_Max, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.Galaxy_S20, ScreenOrientation.LANDSCAPE);
+        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
+        config.addDeviceEmulation(DeviceName.iPhone_11_Pro_Max, ScreenOrientation.LANDSCAPE);
 
 //        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.LANDSCAPE);
