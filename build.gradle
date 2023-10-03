@@ -14,6 +14,7 @@ buildscript {
         testNGVersion = '7.8.0'
         jsonSimpleVersion = '1.1.1'
         applitoolsVersion = '5.64.7'
+        seleniumVersion = '4.13.0'
     }
 }
 
@@ -24,8 +25,11 @@ repositories {
 
 dependencies {
     implementation 'org.testng:testng:' + testNGVersion
-    implementation 'com.applitools:eyes-selenium-java5:' + applitoolsVersion
+    implementation ('com.applitools:eyes-selenium-java5:' + applitoolsVersion) {
+        exclude group: 'org.seleniumhq.selenium', module: 'selenium-java'
+    }
     implementation 'com.googlecode.json-simple:json-simple:' + jsonSimpleVersion
+    implementation "org.seleniumhq.selenium:selenium-java:" + seleniumVersion
 }
 
 static def getCurrentDatestamp() {
