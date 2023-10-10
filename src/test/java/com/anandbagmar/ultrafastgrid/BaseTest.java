@@ -247,18 +247,9 @@ public abstract class BaseTest {
         config.addBrowser(1200, 1024, BrowserType.SAFARI);
         config.addBrowser(1024, 1200, BrowserType.CHROME);
         config.addBrowser(1200, 1200, BrowserType.FIREFOX);
-        config.addDeviceEmulation(DeviceName.Galaxy_S20, ScreenOrientation.LANDSCAPE);
-        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
-        config.addDeviceEmulation(DeviceName.iPhone_11_Pro_Max, ScreenOrientation.LANDSCAPE);
-
-//        config.addDeviceEmulation(DeviceName.iPhone_4, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.Galaxy_S5, ScreenOrientation.LANDSCAPE);
+//        config.addDeviceEmulation(DeviceName.Galaxy_S20, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.iPad_Mini, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.iPad_Pro, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.Galaxy_Note_3, ScreenOrientation.LANDSCAPE);
-//        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.LANDSCAPE);
-
+//        config.addDeviceEmulation(DeviceName.iPhone_11_Pro_Max, ScreenOrientation.LANDSCAPE);
         System.out.println("Running tests on Ultrafast Grid with '" + config.getBrowsersInfo().size() + "' browsers configurations");
         return config;
     }
