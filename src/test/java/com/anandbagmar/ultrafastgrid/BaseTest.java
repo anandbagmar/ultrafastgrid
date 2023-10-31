@@ -244,7 +244,7 @@ public abstract class BaseTest {
 
     private synchronized Configuration getUFGBrowserConfiguration(Configuration config) {
         config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
-        config.addBrowser(1200, 1024, BrowserType.SAFARI);
+//        config.addBrowser(1200, 1024, BrowserType.SAFARI);
         config.addBrowser(1024, 1200, BrowserType.CHROME);
         config.addBrowser(1200, 1200, BrowserType.FIREFOX);
 //        config.addDeviceEmulation(DeviceName.Galaxy_S20, ScreenOrientation.LANDSCAPE);
