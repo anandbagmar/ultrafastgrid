@@ -14,24 +14,17 @@ Run the tests from the IDE or from command line
 or, you can run the testng tests from your IDE
 
 Example commands:
-```
-BROWSER=chrome USE_UFG=false  ./gradlew test --tests "*Applitools*"
-BROWSER=firefox USE_UFG=false  ./gradlew test --tests "*Applitools*"
+* Run without Applitools: `./gradlew test --tests "*ApplitoolsShoppingTest"`
+* Run without Applitools (new build): `INJECT=true ./gradlew test --tests "ApplitoolsShoppingTest"`
+* Run with UFG: `EYES=true USE_UFG=true ./gradlew test --tests "ApplitoolsShoppingWithEyesTest"` 
+* Run with UFG on Execution Cloud: `BROWSER=self_healing EYES=true USE_UFG=true ./gradlew test --tests "ApplitoolsShoppingWithEyesTest"`
+* Run with UFG on Execution Cloud (with self healing): `INJECT=true BROWSER=self_healing EYES=true USE_UFG=true ./gradlew test --tests "ApplitoolsShoppingWithEyesTest"`
 
-BROWSER=firefox USE_UFG=false  ./gradlew test --tests "*GitHub*"
-BROWSER=chrome USE_UFG=false  ./gradlew test --tests "*GitHub*"
-BROWSER=chrome USE_UFG=false DISABLED=true ./gradlew test --tests "*Applitools*"
-BROWSER=chrome USE_UFG=false DISABLED=true INJECT=true ./gradlew test --tests "*Applitools*"
-USE_UFG=false INJECT=false ./gradlew test --tests "*Applitools*"
-USE_UFG=false INJECT=false DISABLED=true ./gradlew test --tests "*Applitools*"
-BROWSER=self_healing USE_UFG=true INJECT=false ./gradlew test --tests "*Applitools*"
-BROWSER=self_healing USE_UFG=true INJECT=true ./gradlew test --tests "*Applitools*"
+Defaults and options:
+```
+BROWSER=chrome [chrome|firefox|edge|safari|self_healing]
+USE_UFG=false [true|false]
+EYES=false [true|false]
+INJECT=false [true|false]
 ```
 
-Defaults:
-```
-BROWSER=chrome
-USE_UFG=false
-DISABLED=false
-INJECT=false
-```

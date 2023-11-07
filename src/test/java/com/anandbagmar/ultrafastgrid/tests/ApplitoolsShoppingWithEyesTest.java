@@ -1,5 +1,6 @@
 package com.anandbagmar.ultrafastgrid.tests;
 
+import com.applitools.eyes.selenium.fluent.Target;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.ITestResult;
@@ -12,15 +13,14 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 
 import static com.anandbagmar.ultrafastgrid.BaseTest.getDriver;
+import static com.anandbagmar.ultrafastgrid.BaseTest.getEyes;
 import static com.anandbagmar.ultrafastgrid.BaseTest.isInject;
 import static com.anandbagmar.ultrafastgrid.BaseTest.runAfterMethod;
 import static com.anandbagmar.ultrafastgrid.BaseTest.runAfterSuite;
 import static com.anandbagmar.ultrafastgrid.BaseTest.runBeforeMethod;
 import static com.anandbagmar.ultrafastgrid.BaseTest.runBeforeSuite;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
-public class ApplitoolsShoppingTest {
+public class ApplitoolsShoppingWithEyesTest {
 
     @BeforeSuite
     public void beforeSuite() {
@@ -43,24 +43,24 @@ public class ApplitoolsShoppingTest {
     }
 
     @Test(description = "Add to cart")
-    public void addToCart() {
+    public void addToCartWithEyes() {
         String url = "https://demo.applitools.com/tlcHackathonMasterV1.html";
         getDriver().get(url);
-        String product1Name = getDriver().findElement(By.id("DIV__colcolmd__210")).getText();
-        String expectedShoeName = "Appli Air x Night";
-        boolean productNameFound = product1Name.contains(expectedShoeName);
-        assertTrue(productNameFound, "Product 1 name is incorrect");
         By product1Id = By.id("product_1");
+        getEyes().check("onLoad-MultipleValidations", Target.window().fully()
+                .strict(product1Id)
+                .layout(By.id("filter_col"), By.id("A__cartbt__49")));
         getDriver().findElement(product1Id).click();
-        String shoeName = getDriver().findElement(By.id("shoe_name")).getText();
-        assertEquals(shoeName, expectedShoeName, "Product page has incorrect product name");
+
         if (isInject()) {
             ((JavascriptExecutor) getDriver()).executeScript("document.querySelector(\"input#INPUTtext____42\").setAttribute(\"placeholder\", \"Search shoes\")");
             ((JavascriptExecutor) getDriver()).executeScript("document.querySelector(\"div#DIV__btnaddtoca__113\").setAttribute(\"id\", \"foo\")");
         }
-        int numberOfProductsInCartBeforeUpdating = Integer.parseInt(getDriver().findElement(By.id("STRONG____50")).getText());
+        By INPU_TTEXT____42 = By.id("INPUTtext____42");
+        getEyes().check("product_1_MultipleValidations", Target.window().fully()
+                .strict()
+                .layout(INPU_TTEXT____42));
         getDriver().findElement(By.id("DIV__btnaddtoca__113")).click();
-        int numberOfProductsInCartAfterUpdating = Integer.parseInt(getDriver().findElement(By.id("STRONG____50")).getText());
-        assertEquals(numberOfProductsInCartAfterUpdating - numberOfProductsInCartBeforeUpdating, 0, "Number of products added to cart didn't update");
+        getEyes().checkWindow("add to cart");
     }
 }

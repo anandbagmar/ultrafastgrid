@@ -1,20 +1,22 @@
 package com.anandbagmar.ultrafastgrid;
 
 import com.applitools.eyes.*;
-import com.applitools.eyes.selenium.*;
-import com.applitools.eyes.visualgrid.model.DeviceName;
-import com.applitools.eyes.visualgrid.model.ScreenOrientation;
+import com.applitools.eyes.selenium.BrowserType;
+import com.applitools.eyes.selenium.ClassicRunner;
+import com.applitools.eyes.selenium.Configuration;
+import com.applitools.eyes.selenium.Eyes;
+import com.applitools.eyes.selenium.StitchMode;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
 
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -25,50 +27,44 @@ import java.util.Date;
 import java.util.Random;
 
 public abstract class BaseTest {
-    private final int concurrency = 20;
-    private LocalDateTime bt_beforeMethod;
-    private LocalDateTime bt_afterMethod;
-    private EyesRunner runner;
-    private BatchInfo batchInfo = null;
-    private String appName;
-    protected WebDriver driver;
-    protected Eyes eyes;
+    private static final int concurrency = 20;
+    private static LocalDateTime bt_beforeMethod;
+    private static LocalDateTime bt_afterMethod;
+    public static EyesRunner runner;
+    private static BatchInfo batchInfo = null;
+    private static String appName = "applitools-shopping";
+    private static WebDriver driver;
+    private static Eyes eyes;
+    private static final boolean IS_UFG = (null != System.getenv("USE_UFG") && Boolean.parseBoolean(System.getenv("USE_UFG")));
+    private static final boolean IS_INJECT = (null != System.getenv("INJECT") && Boolean.parseBoolean(System.getenv("INJECT")));
+    private static final boolean IS_EYES_ENABLED = (null != System.getenv("EYES") && Boolean.parseBoolean(System.getenv("EYES")));
+    private static final String BROWSER_NAME = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
 
     protected static RectangleSize getViewportSize() {
         return new RectangleSize(1024, 960);
     }
 
-    protected static String getBrowserName() {
-        return (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
+    public static boolean isInject() {
+        return IS_INJECT;
     }
 
-    protected static boolean isDisabled() {
-        return null != System.getenv("DISABLED") && Boolean.parseBoolean(System.getenv("DISABLED"));
+    public static void runBeforeSuite() {
+        System.out.println("------------------------ BEFORE SUITE - started  ------------------------");
+        System.out.println("IS_EYES_ENABLED: " + IS_EYES_ENABLED);
+        System.out.println("IS_UFG: " + IS_UFG);
+        System.out.println("IS_INJECT: " + IS_INJECT);
+        System.out.println("BROWSER_NAME: " + BROWSER_NAME);
+        appName = getUpdatedAppName();
+        System.out.println("appNameFromTest: " + appName);
+        if (IS_EYES_ENABLED) {
+            runner = IS_UFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
+            runner.setDontCloseBatches(true);
+            setupBatchInfo();
+        }
+        System.out.println("------------------------ BEFORE SUITE - finished ------------------------");
     }
 
-    protected static boolean isInject() {
-        return null != System.getenv("INJECT") && Boolean.parseBoolean(System.getenv("INJECT"));
-    }
-
-    private static boolean isUfg() {
-        return (null != System.getenv("USE_UFG") && Boolean.parseBoolean(System.getenv("USE_UFG")));
-    }
-
-    protected void setupBeforeSuite(String appNameFromTest) {
-        System.out.println("--------------------------------------------------------------------");
-        boolean useUFG = isUfg();
-        System.out.println("useUFG: " + useUFG);
-        runner = useUFG ? new VisualGridRunner(concurrency) : new ClassicRunner();
-        runner.setDontCloseBatches(true);
-        System.out.println("--------------------------------------------------------------------");
-
-        appName = getUpdatedAppName(appNameFromTest);
-
-        System.out.println("appNameFromTest: " + appNameFromTest);
-        setupBatchInfo();
-    }
-
-    private void setupBatchInfo() {
+    private static void setupBatchInfo() {
         if (null == batchInfo) {
             batchInfo = new BatchInfo(appName);
             batchInfo.setNotifyOnCompletion(false);
@@ -78,27 +74,46 @@ public abstract class BaseTest {
         System.out.println(null == batchInfo ? "batchInfo is null" : "batchInfo: " + batchInfo.getId());
     }
 
-    protected synchronized void setupBeforeMethod(Method method, boolean takeFullPageScreenshot) {
-        String className = this.getClass().getSimpleName();
-        driver = createDriver(method, getBrowserName());
-        eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot);
-        eyes.open(driver, appName, className + "-" + method.getName(), getViewportSize());
-        System.out.println("BeforeMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: '" + eyes.getConfiguration().getBatch().getName() + "'");
+    public static synchronized void runBeforeMethod(String className, Method method, boolean takeFullPageScreenshot) {
+        System.out.println("------------------------ BeforeMethod - started  ------------------------");
+        driver = createDriver(method, BROWSER_NAME);
+        if (IS_EYES_ENABLED) {
+            eyes = configureEyes(runner, batchInfo, takeFullPageScreenshot);
+            eyes.open(driver, appName, className + "-" + method.getName(), getViewportSize());
+            System.out.println("BeforeMethod: Test name: " + eyes.getConfiguration().getTestName() + ", App Name: " + eyes.getConfiguration().getAppName() + ", Batch name: '" + eyes.getConfiguration().getBatch().getName() + "'");
+        } else {
+            System.out.println("BeforeMethod: Test name: " + method.getName());
+        }
+        System.out.println("------------------------ BeforeMethod - finished ------------------------");
     }
 
-    private String getUpdatedAppName(String appName) {
-        if (isUfg()) {
+    public static synchronized Eyes getEyes() {
+        if (null == eyes) {
+            throw new RuntimeException("Eyes is not initialized");
+        }
+        return eyes;
+    }
+
+    public static synchronized WebDriver getDriver() {
+        if (null == driver) {
+            throw new RuntimeException("driver is not initialized");
+        }
+        return driver;
+    }
+
+    private static String getUpdatedAppName() {
+        if (IS_UFG) {
             appName = appName + "-UFG";
         }
         return appName;
     }
 
-    private long randomWithRange() {
+    private static long randomWithRange() {
         Random random = new Random();
         return new Date().getTime() - random.nextInt();
     }
 
-    private synchronized WebDriver createDriver(Method method, String browser) {
+    private static synchronized WebDriver createDriver(Method method, String browser) {
         System.out.println("BaseTest: createDriver for test: '" + method.getName() + "' with ThreadID: " + Thread.currentThread().getId());
         bt_beforeMethod = LocalDateTime.now();
         WebDriver innerDriver = null;
@@ -111,6 +126,16 @@ public abstract class BaseTest {
             case "firefox":
                 System.out.println("Creating local FirefoxDriver");
                 innerDriver = new FirefoxDriver();
+                break;
+            case "edge":
+                System.out.println("Creating local EdgeDriver");
+                innerDriver = new EdgeDriver();
+                break;
+            case "safari":
+                System.out.println("Creating local SafariDriver");
+                innerDriver = new SafariDriver();
+                innerDriver.manage().window().maximize();
+                innerDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
                 break;
             case "self_healing":
                 System.out.println("Creating Driver using ExecutionCloud");
@@ -145,15 +170,17 @@ public abstract class BaseTest {
         return innerDriver;
     }
 
-    @AfterMethod(alwaysRun = true)
-    public void afterMethod(ITestResult result) {
+    public static void runAfterMethod(ITestResult result) {
+        System.out.println("------------------------ AfterMethod - started  ------------------------");
         System.out.printf("AfterMethod: Test name: %s, App Name: %s%n", result.getName(), appName);
 
-        eyes.closeAsync();
+        if (null!= eyes) {
+            eyes.closeAsync();
+        }
         quitDriver();
 
         boolean mismatchFound = false;
-        if (!isDisabled()) {
+        if (IS_EYES_ENABLED) {
             System.out.printf("Batch name: '%s'%n", eyes.getConfiguration().getBatch().getName());
             // fail the test if there is any visual difference found
             TestResultsSummary allTestResults = runner.getAllTestResults(false);
@@ -168,13 +195,17 @@ public abstract class BaseTest {
         bt_afterMethod = LocalDateTime.now();
         long seconds = Duration.between(bt_beforeMethod, bt_afterMethod).toMillis() / 1000;
         System.out.println(">>> " + BaseTest.class.getSimpleName() + " - Tests: '" + result.getName() + "' took '" + seconds + "' seconds to run");
+        System.out.println("------------------------ AfterMethod - finished ------------------------");
         Assert.assertFalse(mismatchFound, "Visual differences found");
     }
 
-    @AfterSuite(alwaysRun = true)
-    public void afterSuite() {
-        System.out.println("Closing the runner");
-        runner.close();
+    public static void runAfterSuite() {
+        System.out.println("------------------------ After SUITE - started  ------------------------");
+        if (null != runner) {
+            System.out.println("Closing the runner");
+            runner.close();
+        }
+        System.out.println("------------------------ After SUITE - finished ------------------------");
     }
 
     protected void waitFor(int numSeconds) {
@@ -185,7 +216,7 @@ public abstract class BaseTest {
         }
     }
 
-    protected void quitDriver() {
+    protected static void quitDriver() {
         if (null != driver) {
             try {
                 driver.close();
@@ -198,7 +229,7 @@ public abstract class BaseTest {
         }
     }
 
-    protected boolean handleTestResults(Throwable ex, TestResults result) {
+    protected static boolean handleTestResults(Throwable ex, TestResults result) {
         boolean hasMismatches = false;
         System.out.println(result);
         System.out.println("\tTest Name: " + result.getName() + " :: " + result);
@@ -219,13 +250,13 @@ public abstract class BaseTest {
         return hasMismatches;
     }
 
-    private synchronized Eyes configureEyes(EyesRunner runner, BatchInfo batch, boolean takeFullPageScreenshot) {
+    private static synchronized Eyes configureEyes(EyesRunner runner, BatchInfo batch, boolean takeFullPageScreenshot) {
         Eyes eyes = new Eyes(runner);
-        System.out.println("Is Applitools Visual AI enabled? - " + !isDisabled());
+        System.out.println("Is Applitools Visual AI enabled? - " + IS_EYES_ENABLED);
         Configuration config = eyes.getConfiguration();
         config.setBatch(batch);
         config.setMatchLevel(MatchLevel.STRICT);
-        config.setIsDisabled(isDisabled());
+        config.setIsDisabled(!IS_EYES_ENABLED);
         config.setStitchMode(StitchMode.CSS);
         config.setForceFullPageScreenshot(takeFullPageScreenshot);
         config.getBatch().setNotifyOnCompletion(false);
@@ -237,12 +268,12 @@ public abstract class BaseTest {
         config.setApiKey(applitoolsApiKey);
         eyes.setLogHandler(new StdoutLogHandler(true));
         config.setSendDom(true);
-        config = getUFGBrowserConfiguration(config);
+        getUFGBrowserConfiguration(config);
         eyes.setConfiguration(config);
         return eyes;
     }
 
-    private synchronized Configuration getUFGBrowserConfiguration(Configuration config) {
+    private static synchronized void getUFGBrowserConfiguration(Configuration config) {
         config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
 //        config.addBrowser(1200, 1024, BrowserType.SAFARI);
         config.addBrowser(1024, 1200, BrowserType.CHROME);
@@ -251,7 +282,6 @@ public abstract class BaseTest {
 //        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPhone_11_Pro_Max, ScreenOrientation.LANDSCAPE);
         System.out.println("Running tests on Ultrafast Grid with '" + config.getBrowsersInfo().size() + "' browsers configurations");
-        return config;
     }
 
 }
