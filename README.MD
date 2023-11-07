@@ -6,13 +6,6 @@
 * Set the Applitools API key as an environment variable - *APPLITOOLS_API_KEY* (You can register at www.applitools.com and get a trial account)
 
 # Running the tests
-Run the tests from the IDE or from command line
-```
-./gradlew clean test
-```
-
-or, you can run the testng tests from your IDE
-
 Example commands:
 * Run without Applitools: `./gradlew test --tests "*ApplitoolsShoppingTest"`
 * Run without Applitools (new build): `INJECT=true ./gradlew test --tests "ApplitoolsShoppingTest"`
