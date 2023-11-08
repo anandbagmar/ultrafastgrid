@@ -87,14 +87,14 @@ public abstract class BaseTest {
         System.out.println("------------------------ BeforeMethod - finished ------------------------");
     }
 
-    public static synchronized Eyes getEyes() {
+    public static synchronized Eyes myEyes() {
         if (null == eyes) {
             throw new RuntimeException("Eyes is not initialized");
         }
         return eyes;
     }
 
-    public static synchronized WebDriver getDriver() {
+    public static synchronized WebDriver myDriver() {
         if (null == driver) {
             throw new RuntimeException("driver is not initialized");
         }

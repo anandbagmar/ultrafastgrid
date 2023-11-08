@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-import static com.anandbagmar.ultrafastgrid.BaseTest.getDriver;
+import static com.anandbagmar.ultrafastgrid.BaseTest.myDriver;
 import static com.anandbagmar.ultrafastgrid.BaseTest.isInject;
 import static com.anandbagmar.ultrafastgrid.BaseTest.runAfterMethod;
 import static com.anandbagmar.ultrafastgrid.BaseTest.runAfterSuite;
@@ -45,22 +45,22 @@ public class ApplitoolsShoppingTest {
     @Test(description = "Add to cart")
     public void addToCart() {
         String url = "https://demo.applitools.com/tlcHackathonMasterV1.html";
-        getDriver().get(url);
-        String product1Name = getDriver().findElement(By.id("DIV__colcolmd__210")).getText();
+        myDriver().get(url);
+        String product1Name = myDriver().findElement(By.id("DIV__colcolmd__210")).getText();
         String expectedShoeName = "Appli Air x Night";
         boolean productNameFound = product1Name.contains(expectedShoeName);
         assertTrue(productNameFound, "Product 1 name is incorrect");
         By product1Id = By.id("product_1");
-        getDriver().findElement(product1Id).click();
-        String shoeName = getDriver().findElement(By.id("shoe_name")).getText();
+        myDriver().findElement(product1Id).click();
+        String shoeName = myDriver().findElement(By.id("shoe_name")).getText();
         assertEquals(shoeName, expectedShoeName, "Product page has incorrect product name");
         if (isInject()) {
-            ((JavascriptExecutor) getDriver()).executeScript("document.querySelector(\"input#INPUTtext____42\").setAttribute(\"placeholder\", \"Search shoes\")");
-            ((JavascriptExecutor) getDriver()).executeScript("document.querySelector(\"div#DIV__btnaddtoca__113\").setAttribute(\"id\", \"foo\")");
+            ((JavascriptExecutor) myDriver()).executeScript("document.querySelector(\"input#INPUTtext____42\").setAttribute(\"placeholder\", \"Search shoes\")");
+            ((JavascriptExecutor) myDriver()).executeScript("document.querySelector(\"div#DIV__btnaddtoca__113\").setAttribute(\"id\", \"foo\")");
         }
-        int numberOfProductsInCartBeforeUpdating = Integer.parseInt(getDriver().findElement(By.id("STRONG____50")).getText());
-        getDriver().findElement(By.id("DIV__btnaddtoca__113")).click();
-        int numberOfProductsInCartAfterUpdating = Integer.parseInt(getDriver().findElement(By.id("STRONG____50")).getText());
+        int numberOfProductsInCartBeforeUpdating = Integer.parseInt(myDriver().findElement(By.id("STRONG____50")).getText());
+        myDriver().findElement(By.id("DIV__btnaddtoca__113")).click();
+        int numberOfProductsInCartAfterUpdating = Integer.parseInt(myDriver().findElement(By.id("STRONG____50")).getText());
         assertEquals(numberOfProductsInCartAfterUpdating - numberOfProductsInCartBeforeUpdating, 0, "Number of products added to cart didn't update");
     }
 }

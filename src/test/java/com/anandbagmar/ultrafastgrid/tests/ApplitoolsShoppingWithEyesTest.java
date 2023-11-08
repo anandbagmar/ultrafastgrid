@@ -12,8 +12,8 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-import static com.anandbagmar.ultrafastgrid.BaseTest.getDriver;
-import static com.anandbagmar.ultrafastgrid.BaseTest.getEyes;
+import static com.anandbagmar.ultrafastgrid.BaseTest.myDriver;
+import static com.anandbagmar.ultrafastgrid.BaseTest.myEyes;
 import static com.anandbagmar.ultrafastgrid.BaseTest.isInject;
 import static com.anandbagmar.ultrafastgrid.BaseTest.runAfterMethod;
 import static com.anandbagmar.ultrafastgrid.BaseTest.runAfterSuite;
@@ -45,22 +45,22 @@ public class ApplitoolsShoppingWithEyesTest {
     @Test(description = "Add to cart")
     public void addToCartWithEyes() {
         String url = "https://demo.applitools.com/tlcHackathonMasterV1.html";
-        getDriver().get(url);
+        myDriver().get(url);
         By product1Id = By.id("product_1");
-        getEyes().check("onLoad-MultipleValidations", Target.window().fully()
+        myEyes().check("onLoad-MultipleValidations", Target.window().fully()
                 .strict(product1Id)
                 .layout(By.id("filter_col"), By.id("A__cartbt__49")));
-        getDriver().findElement(product1Id).click();
+        myDriver().findElement(product1Id).click();
 
         if (isInject()) {
-            ((JavascriptExecutor) getDriver()).executeScript("document.querySelector(\"input#INPUTtext____42\").setAttribute(\"placeholder\", \"Search shoes\")");
-            ((JavascriptExecutor) getDriver()).executeScript("document.querySelector(\"div#DIV__btnaddtoca__113\").setAttribute(\"id\", \"foo\")");
+            ((JavascriptExecutor) myDriver()).executeScript("document.querySelector(\"input#INPUTtext____42\").setAttribute(\"placeholder\", \"Search shoes\")");
+            ((JavascriptExecutor) myDriver()).executeScript("document.querySelector(\"div#DIV__btnaddtoca__113\").setAttribute(\"id\", \"foo\")");
         }
         By INPU_TTEXT____42 = By.id("INPUTtext____42");
-        getEyes().check("product_1_MultipleValidations", Target.window().fully()
+        myEyes().check("product_1_MultipleValidations", Target.window().fully()
                 .strict()
                 .layout(INPU_TTEXT____42));
-        getDriver().findElement(By.id("DIV__btnaddtoca__113")).click();
-        getEyes().checkWindow("add to cart");
+        myDriver().findElement(By.id("DIV__btnaddtoca__113")).click();
+        myEyes().checkWindow("add to cart");
     }
 }
