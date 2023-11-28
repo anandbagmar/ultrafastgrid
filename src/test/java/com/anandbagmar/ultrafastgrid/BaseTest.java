@@ -17,6 +17,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.testng.ITestResult;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,7 +39,7 @@ public abstract class BaseTest {
     private static final boolean IS_UFG = (null != System.getenv("USE_UFG") && Boolean.parseBoolean(System.getenv("USE_UFG")));
     private static final boolean IS_INJECT = (null != System.getenv("INJECT") && Boolean.parseBoolean(System.getenv("INJECT")));
     public static boolean IS_EYES_ENABLED = (null != System.getenv("EYES") && Boolean.parseBoolean(System.getenv("EYES")));
-    private static final String BROWSER_NAME = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
+    public static final String BROWSER_NAME = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
 
     protected static RectangleSize getViewportSize() {
         return new RectangleSize(1024, 960);
@@ -153,10 +154,14 @@ public abstract class BaseTest {
 
     private static WebDriver createExecutionCloudRemoteDriver() {
         WebDriver innerDriver;
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setBrowserName("chrome");
+        ChromeOptions chromeOptions = new ChromeOptions();
+        File file = new File("./src/test/resources/ModHeaderModify-HTTP-headers.crx");
+        if (!file.exists()) {
+            throw new RuntimeException("Extension not found");
+        }
+        chromeOptions.addExtensions(file);
         try {
-            innerDriver = new RemoteWebDriver(new URL(Eyes.getExecutionCloudURL()), caps);
+            innerDriver = new RemoteWebDriver(new URL(Eyes.getExecutionCloudURL()), chromeOptions);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -168,7 +173,7 @@ public abstract class BaseTest {
         System.out.printf("AfterMethod: Test name: %s, App Name: %s%n", result.getName(), appName);
 
         boolean mismatchFound = false;
-        if (IS_EYES_ENABLED) {
+        if (IS_EYES_ENABLED && eyes!=null) {
             System.out.printf("Batch name: '%s'%n", eyes.getConfiguration().getBatch().getName());
             // fail the test if there is any visual difference found
             TestResultsSummary allTestResults = runner.get().getAllTestResults(false);

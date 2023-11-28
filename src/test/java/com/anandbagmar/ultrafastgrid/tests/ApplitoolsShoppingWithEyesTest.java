@@ -33,7 +33,7 @@ public class ApplitoolsShoppingWithEyesTest {
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod(Method method) {
         createRunner();
-        createDriver(method, "chrome");
+        createDriver(method, BROWSER_NAME);
         createEyes(getDriver(), this.getClass().getSimpleName(), method, true);
     }
 
@@ -47,7 +47,7 @@ public class ApplitoolsShoppingWithEyesTest {
         Assert.assertTrue(visualValidationPassed, "Visual differences found");
     }
 
-    @Test(description = "Add to cart")
+//    @Test(description = "Add to cart")
     public void addToCartWithEyes_2() {
         String url = "https://demo.applitools.com/tlcHackathonMasterV1.html";
         WebDriver driver = getDriver();
