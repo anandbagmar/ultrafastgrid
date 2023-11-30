@@ -42,7 +42,7 @@ public abstract class BaseTest {
     public static final String BROWSER_NAME = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
 
     protected static RectangleSize getViewportSize() {
-        return new RectangleSize(1024, 960);
+        return new RectangleSize(1200, 1024);
     }
 
     public static boolean isInject() {
@@ -288,10 +288,10 @@ public abstract class BaseTest {
     }
 
     private static synchronized void getUFGBrowserConfiguration(Configuration config) {
-        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
+        config.addBrowser(1600, 1200, BrowserType.EDGE_CHROMIUM);
 //        config.addBrowser(1200, 1024, BrowserType.SAFARI);
-        config.addBrowser(1024, 1200, BrowserType.CHROME);
-        config.addBrowser(1200, 1200, BrowserType.FIREFOX);
+        config.addBrowser(1500, 1200, BrowserType.CHROME);
+        config.addBrowser(1400, 1200, BrowserType.FIREFOX);
 //        config.addDeviceEmulation(DeviceName.Galaxy_S20, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPhone_11_Pro_Max, ScreenOrientation.LANDSCAPE);
