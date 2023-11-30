@@ -12,7 +12,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.testng.ITestResult;
@@ -23,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -147,6 +147,8 @@ public abstract class BaseTest {
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.addArguments("--remote-allow-origins=*");
+        addExtensionsToChromeOptions(options);
+
 //                options.addArguments("headless");
         innerDriver = new ChromeDriver(options);
         return innerDriver;
@@ -155,17 +157,30 @@ public abstract class BaseTest {
     private static WebDriver createExecutionCloudRemoteDriver() {
         WebDriver innerDriver;
         ChromeOptions chromeOptions = new ChromeOptions();
-        File file = new File("./src/test/resources/ModHeaderModify-HTTP-headers.crx");
-        if (!file.exists()) {
-            throw new RuntimeException("Extension not found");
-        }
-        chromeOptions.addExtensions(file);
+        addExtensionsToChromeOptions(chromeOptions);
         try {
             innerDriver = new RemoteWebDriver(new URL(Eyes.getExecutionCloudURL()), chromeOptions);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
         return innerDriver;
+    }
+
+    private static void addExtensionsToChromeOptions(ChromeOptions chromeOptions) {
+        // https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa?utm_source=ext_app_menu
+        File jsonFormatter = new File("./src/test/resources/JSON-Formatter.crx");
+        // https://chrome.google.com/webstore/detail/modheader-modify-http-hea/idgpnmonknjnojddfkpgkljpfnnfcklj?utm_source=ext_app_menu
+        File modHeaders = new File("./src/test/resources/ModHeader.crx");
+        // https://chrome.google.com/webstore/detail/http-tracker/fklakbbaaknbgcedidhblbnhclijnhbi?utm_source=ext_app_menu
+        File httpTracker = new File("./src/test/resources/HTTP-TRACKER.crx");
+        // https://chrome.google.com/webstore/detail/workona-spaces-tab-manage/ailcmbgekjpnablpdkmaaccecekgdhlh?utm_source=ext_app_menu
+        File tabManager = new File("./src/test/resources/Workona-Spaces-Tab-Manager.crx");
+        ArrayList<File> extensions = new ArrayList<>();
+        extensions.add(jsonFormatter);
+        extensions.add(tabManager);
+//        extensions.add(modHeaders);
+        extensions.add(httpTracker);
+        chromeOptions.addExtensions(extensions);
     }
 
     public static synchronized boolean isVisualValidationPassed(ITestResult result, Eyes eyes) {
