@@ -12,7 +12,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.testng.ITestResult;
@@ -23,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -42,7 +42,7 @@ public abstract class BaseTest {
     public static final String BROWSER_NAME = (null == System.getenv("BROWSER")) ? "chrome" : System.getenv("BROWSER");
 
     protected static RectangleSize getViewportSize() {
-        return new RectangleSize(1024, 960);
+        return new RectangleSize(1200, 1024);
     }
 
     public static boolean isInject() {
@@ -147,7 +147,8 @@ public abstract class BaseTest {
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.addArguments("--remote-allow-origins=*");
-//                options.addArguments("headless");
+        addExtensionsToChromeOptions(options);
+//        options.addArguments("headless");
         innerDriver = new ChromeDriver(options);
         return innerDriver;
     }
@@ -155,17 +156,24 @@ public abstract class BaseTest {
     private static WebDriver createExecutionCloudRemoteDriver() {
         WebDriver innerDriver;
         ChromeOptions chromeOptions = new ChromeOptions();
-        File file = new File("./src/test/resources/ModHeaderModify-HTTP-headers.crx");
-        if (!file.exists()) {
-            throw new RuntimeException("Extension not found");
-        }
-        chromeOptions.addExtensions(file);
+        addExtensionsToChromeOptions(chromeOptions);
         try {
             innerDriver = new RemoteWebDriver(new URL(Eyes.getExecutionCloudURL()), chromeOptions);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
         return innerDriver;
+    }
+
+    private static void addExtensionsToChromeOptions(ChromeOptions chromeOptions) {
+        // https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa?utm_source=ext_app_menu
+        File jsonFormatter = new File("./src/test/resources/JSON-Formatter.crx");
+        // https://chrome.google.com/webstore/detail/modheader-modify-http-hea/idgpnmonknjnojddfkpgkljpfnnfcklj?utm_source=ext_app_menu
+        File modHeaders = new File("./src/test/resources/ModHeader.crx");
+        ArrayList<File> extensions = new ArrayList<>();
+        extensions.add(jsonFormatter);
+        extensions.add(modHeaders);
+        chromeOptions.addExtensions(extensions);
     }
 
     public static synchronized boolean isVisualValidationPassed(ITestResult result, Eyes eyes) {
@@ -273,10 +281,10 @@ public abstract class BaseTest {
     }
 
     private static synchronized void getUFGBrowserConfiguration(Configuration config) {
-        config.addBrowser(1024, 1024, BrowserType.EDGE_CHROMIUM);
+        config.addBrowser(1600, 1200, BrowserType.EDGE_CHROMIUM);
 //        config.addBrowser(1200, 1024, BrowserType.SAFARI);
-        config.addBrowser(1024, 1200, BrowserType.CHROME);
-        config.addBrowser(1200, 1200, BrowserType.FIREFOX);
+        config.addBrowser(1500, 1200, BrowserType.CHROME);
+        config.addBrowser(1400, 1200, BrowserType.FIREFOX);
 //        config.addDeviceEmulation(DeviceName.Galaxy_S20, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPad, ScreenOrientation.LANDSCAPE);
 //        config.addDeviceEmulation(DeviceName.iPhone_11_Pro_Max, ScreenOrientation.LANDSCAPE);
