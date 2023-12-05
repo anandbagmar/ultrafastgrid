@@ -148,8 +148,7 @@ public abstract class BaseTest {
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.addArguments("--remote-allow-origins=*");
         addExtensionsToChromeOptions(options);
-
-//                options.addArguments("headless");
+//        options.addArguments("headless");
         innerDriver = new ChromeDriver(options);
         return innerDriver;
     }
@@ -171,15 +170,9 @@ public abstract class BaseTest {
         File jsonFormatter = new File("./src/test/resources/JSON-Formatter.crx");
         // https://chrome.google.com/webstore/detail/modheader-modify-http-hea/idgpnmonknjnojddfkpgkljpfnnfcklj?utm_source=ext_app_menu
         File modHeaders = new File("./src/test/resources/ModHeader.crx");
-        // https://chrome.google.com/webstore/detail/http-tracker/fklakbbaaknbgcedidhblbnhclijnhbi?utm_source=ext_app_menu
-        File httpTracker = new File("./src/test/resources/HTTP-TRACKER.crx");
-        // https://chrome.google.com/webstore/detail/workona-spaces-tab-manage/ailcmbgekjpnablpdkmaaccecekgdhlh?utm_source=ext_app_menu
-        File tabManager = new File("./src/test/resources/Workona-Spaces-Tab-Manager.crx");
         ArrayList<File> extensions = new ArrayList<>();
         extensions.add(jsonFormatter);
-        extensions.add(tabManager);
-//        extensions.add(modHeaders);
-        extensions.add(httpTracker);
+        extensions.add(modHeaders);
         chromeOptions.addExtensions(extensions);
     }
 
