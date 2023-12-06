@@ -262,6 +262,7 @@ public abstract class BaseTest {
         System.out.println("Is Applitools Visual AI enabled? - " + IS_EYES_ENABLED);
         Configuration config = eyes.getConfiguration();
         config.setBatch(batch);
+        config.setSaveNewTests(false);
         config.setMatchLevel(MatchLevel.STRICT);
         config.setIsDisabled(!IS_EYES_ENABLED);
         config.setStitchMode(StitchMode.CSS);
