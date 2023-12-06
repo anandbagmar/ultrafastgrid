@@ -47,7 +47,7 @@ public class ApplitoolsShoppingWithEyesTest {
         Assert.assertTrue(visualValidationPassed, "Visual differences found");
     }
 
-//    @Test(description = "Add to cart")
+    @Test(description = "Add to cart")
     public void addToCartWithEyes_2() {
         String url = "https://demo.applitools.com/tlcHackathonMasterV1.html";
         WebDriver driver = getDriver();
@@ -79,8 +79,8 @@ public class ApplitoolsShoppingWithEyesTest {
         driver.get(url);
         By product1Id = By.id("product_1");
         eyes.check("onLoad-MultipleValidations-1", Target.window().fully()
-                .layout(product1Id)
-                .strict(By.id("filter_col"), By.id("A__cartbt__49")));
+                .strict(product1Id)
+                .layout(By.id("filter_col"), By.id("A__cartbt__49")));
         driver.findElement(product1Id).click();
 
         if (isInject()) {
@@ -89,8 +89,8 @@ public class ApplitoolsShoppingWithEyesTest {
         }
         By INPU_TTEXT____42 = By.id("INPUTtext____42");
         eyes.check("product_1_MultipleValidations-1", Target.window().fully()
-                .layout()
-                .strict(INPU_TTEXT____42));
+                .strict()
+                .layout(INPU_TTEXT____42));
         driver.findElement(By.id("DIV__btnaddtoca__113")).click();
         eyes.checkWindow("add to cart-1");
     }

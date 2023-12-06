@@ -12,6 +12,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.testng.ITestResult;
@@ -28,6 +29,7 @@ import java.util.Random;
 
 public abstract class BaseTest {
     private static final int concurrency = 20;
+    private static final String APPLITOOLS_API_KEY = System.getenv("APPLITOOLS_API_KEY");
     private static LocalDateTime bt_beforeMethod;
     private static LocalDateTime bt_afterMethod;
     private static ThreadLocal<EyesRunner> runner = new ThreadLocal<>();
@@ -157,8 +159,10 @@ public abstract class BaseTest {
         WebDriver innerDriver;
         ChromeOptions chromeOptions = new ChromeOptions();
 //        addExtensionsToChromeOptions(chromeOptions);
+        DesiredCapabilities capabilities = new DesiredCapabilities(chromeOptions);
+        capabilities.setCapability("applitools:apiKey", APPLITOOLS_API_KEY);
         try {
-            innerDriver = new RemoteWebDriver(new URL(Eyes.getExecutionCloudURL()), chromeOptions);
+            innerDriver = new RemoteWebDriver(new URL(Eyes.getExecutionCloudURL()), capabilities);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -272,7 +276,7 @@ public abstract class BaseTest {
         branchName = ((null != branchName) && (!branchName.trim().isEmpty())) ? branchName.toLowerCase() : "main";
         System.out.println("Branch name: " + branchName);
         config.setBranchName(branchName);
-        String applitoolsApiKey = System.getenv("APPLITOOLS_API_KEY");
+        String applitoolsApiKey = APPLITOOLS_API_KEY;
         config.setApiKey(applitoolsApiKey);
         eyes.setLogHandler(new StdoutLogHandler(true));
         config.setSendDom(true);
