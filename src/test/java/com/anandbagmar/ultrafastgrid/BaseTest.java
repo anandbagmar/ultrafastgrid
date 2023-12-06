@@ -147,7 +147,7 @@ public abstract class BaseTest {
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.addArguments("--remote-allow-origins=*");
-        addExtensionsToChromeOptions(options);
+//        addExtensionsToChromeOptions(options);
 //        options.addArguments("headless");
         innerDriver = new ChromeDriver(options);
         return innerDriver;
@@ -156,7 +156,7 @@ public abstract class BaseTest {
     private static WebDriver createExecutionCloudRemoteDriver() {
         WebDriver innerDriver;
         ChromeOptions chromeOptions = new ChromeOptions();
-        addExtensionsToChromeOptions(chromeOptions);
+//        addExtensionsToChromeOptions(chromeOptions);
         try {
             innerDriver = new RemoteWebDriver(new URL(Eyes.getExecutionCloudURL()), chromeOptions);
         } catch (MalformedURLException e) {
