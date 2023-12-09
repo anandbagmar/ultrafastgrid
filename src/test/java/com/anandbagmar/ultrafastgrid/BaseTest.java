@@ -77,7 +77,7 @@ public abstract class BaseTest {
             batchInfo.setNotifyOnCompletion(false);
             String batchID = String.valueOf(randomWithRange());
             batchInfo.setId(batchID);
-            batchInfo.addProperty("Repo", new File(System.getProperty("user.dir")).getName());
+            batchInfo.addProperty("REPOSITORY_NAME", new File(System.getProperty("user.dir")).getName());
         }
         System.out.println(null == batchInfo ? "batchInfo is null" : "batchInfo: " + batchInfo.getId());
     }
