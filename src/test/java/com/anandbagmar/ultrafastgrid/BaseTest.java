@@ -77,6 +77,7 @@ public abstract class BaseTest {
             batchInfo.setNotifyOnCompletion(false);
             String batchID = String.valueOf(randomWithRange());
             batchInfo.setId(batchID);
+            batchInfo.addProperty("Repo", new File(System.getProperty("user.dir")).getName());
         }
         System.out.println(null == batchInfo ? "batchInfo is null" : "batchInfo: " + batchInfo.getId());
     }
@@ -276,8 +277,7 @@ public abstract class BaseTest {
         branchName = ((null != branchName) && (!branchName.trim().isEmpty())) ? branchName.toLowerCase() : "main";
         System.out.println("Branch name: " + branchName);
         config.setBranchName(branchName);
-        String applitoolsApiKey = APPLITOOLS_API_KEY;
-        config.setApiKey(applitoolsApiKey);
+        config.setApiKey(APPLITOOLS_API_KEY);
         eyes.setLogHandler(new StdoutLogHandler(true));
         config.setSendDom(true);
         getUFGBrowserConfiguration(config);
