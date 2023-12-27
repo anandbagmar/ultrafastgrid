@@ -6,3 +6,4 @@ out/
 reports/
 *.txt
 lib/
+target/
