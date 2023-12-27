@@ -13,7 +13,7 @@ buildscript {
         gradleVersionProperty = '8.5'
         testNGVersion = '7.8.0'
         jsonSimpleVersion = '1.1.1'
-        applitoolsVersion = '5.66.0'
+        applitoolsVersion = '5.66.3'
     }
 }
 
@@ -45,6 +45,7 @@ project.ext.logDir = "${rootDir}/reports/" + getCurrentDatestamp() + "/" + getCu
 test {
     doFirst {
         environment "APPLITOOLS_DONT_CLOSE_BATCHES", "true"
+        environment "APPLITOOLS_LOG_DIR", "${project.logDir}/applitools_logs"
     }
     useTestNG() {
         options {
